@@ -1,0 +1,75 @@
+.links{
+  width: 1200px; /* 加大外层容器宽度，适配更多内容 */
+  /* 或设为 100% 自适应屏幕：width: 100%; */
+  box-sizing: border-box; /* 注意：原代码里是 "sorder-box"，这里要修正为 border-box！ */
+  padding: 20px;
+  background-color: ;
+  margin: 0 auto;
+  border-radius: 10px;
+}
+.links h4{
+    text-align: center;
+    margin: 0 auto;
+}
+.links a{
+    color: orange;
+    text-decoration: none;
+}
+.links .playing{
+    color: red;
+    text-decoration: underline;
+}
+.links{
+    box-sizing:  sorder-box;
+    padding: 20px;
+    background-color: ;
+    margin: 0 auto;
+    border-radius:10px ;
+}
+.links h4{
+    border-bottom:1px solid #aaa ;
+}
+/* 1. 给 ol 容器设置网格布局，强制3列 */
+.links ol {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* gap: 行间距 列间距 → 把列间距调大（比如改成 30px、40px） */
+  gap: 20px 30px; /* 示例：行间距保持20px，列间距增大到30px */
+  padding: 0;
+  list-style: none;
+}
+
+/* 原 .links ol li 部分修改 */
+/* 2. 调整 li 容器的宽度（自适应网格列宽） */
+.links ol li {
+  width: 100%; /* 占满网格列的宽度 */
+  padding: 10px;
+  margin: 0; /* 取消原有的 margin，用 grid 的 gap 控制间距 */
+  border-radius: 8px;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* 让图片在 li 内居中显示（可选） */
+  display: flex;
+  justify-content: center;
+}
+
+/* 3. 确保图片在 li 内完整显示 */
+.links ol li img {
+  max-width: 100%; /* 图片不超出 li 宽度 */
+  height: auto; /* 保持宽高比 */
+  object-fit: contain; /* 完整显示图片 */
+}
+.links ol li:hover {
+  background-image: linear-gradient(to bottom, #dedede, #ffffff);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px); /* 轻微上浮，强化立体交互 */
+  transition: all 0.2s ease;
+}
+.links ol{
+    width: 100%;
+}
+.links ol>li{
+    float: left;
+}

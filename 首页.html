@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>首页</title>
+    <link rel="stylesheet" href="./css/导航栏.css">
+    <link rel="stylesheet" href="./css/图片切换.css">
+    <link rel="stylesheet" href="./css/个人简介.css">
+    <link rel="stylesheet" href="./css/表格.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(0deg,#ace0f9 0%,#fff1eb  100%);
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏（插入到页面顶部） -->
+    <header class="header clear-fix">
+        <div class="header-left clear-fix">
+            <h1 class="logo">倾城的个人网站</h1>
+            <nav class="nav">
+                <a class="nav-item nav-active" href="#">首页</a>
+                <a class="nav-item" href="./列表.html">精选作品</a>
+                <a class="nav-item" href="./作品集.html">作品集</a>
+                <a class="nav-item" href="./约拍.html">约拍须知</a>
+                <a class="nav-item" href="./个人中心.html">个人中心</a>
+            </nav>
+        </div>
+        <div class="header-right">
+            <div class="header-right-unlogined">
+                <a href="./登录.html" class="btn-login">登录</a>
+                <a href="./注册.html" class="btn-reg">注册</a>
+            </div>
+        </div>
+        </header>
+        
+    <!-- 全屏封面轮播区 -->
+    <div class="fullscreen-slider">
+      <!-- 轮播图容器 -->
+      <div class="slider-wrapper">
+        <!-- 轮播图1 -->
+        <div class="slider-item active">
+          <img src="./src/微信图片_20251205132512_90_337.jpg" alt="重庆洪崖洞">
+          <div class="slider-text">
+            <p class="sub-text">2022 夏・重庆奉节 | 奉节街衢：车喧烟火浓</p>
+          </div>
+        </div>
+        <!-- 轮播图2 -->
+        <div class="slider-item">
+          <img src="./src/IMG_4306.jpg" alt="大理花海">
+          <div class="slider-text">
+            <p class="sub-text">2025 秋・重庆夜景 | 风里都是温柔的形状</p>
+          </div>
+        </div>
+        <!-- 轮播图3 -->
+        <div class="slider-item">
+          <img src="./src/ima/5.jpg" alt="上海街拍">
+          <div class="slider-text">
+            <p class="sub-text">2024 夏・广州东莞 | 橙花缀冬</p>
+          </div>
+        </div>
+        <!-- 轮播图4 -->
+        <div class="slider-item">
+          <img src="./src/ima/6.jpg" alt="上海街拍">
+          <div class="slider-text">
+            <p class="sub-text">2025 夏・重庆洪崖洞 | 人间烟火最抚人心</p>
+          </div>
+        </div>
+        <!-- 轮播图5 -->
+        <div class="slider-item">
+          <img src="./src/IMG20240426093510.jpg" alt="上海街拍">
+          <div class="slider-text">
+            <p class="sub-text">2022 夏・重庆奉节 | 人间烟火</p>
+          </div>
+        </div>
+      </div>
+    
+      <!-- 底部叠加标题 -->
+      <div class="slider-title">
+        <h1>倾诚的镜头日记</h1>
+        <p>用快门，藏住生活里的光</p>
+      </div>
+    
+      <!-- 手动切换按钮 -->
+      <button class="slider-control prev-control">←</button>
+      <button class="slider-control next-control">→</button>
+    </div>
+    
+    <script>
+    // 轮播逻辑（自动+手动切换）
+    const sliderItems = document.querySelectorAll('.slider-item');
+    const prevBtn = document.querySelector('.prev-control');
+    const nextBtn = document.querySelector('.next-control');
+    let currentIndex = 0;
+    const autoPlayInterval = 5000; // 自动切换间隔（5秒）
+    
+    // 切换轮播图的函数
+    function switchSlider(index) {
+      // 隐藏当前图
+      sliderItems[currentIndex].classList.remove('active');
+      // 显示目标图
+      sliderItems[index].classList.add('active');
+      currentIndex = index;
+    }
+    
+    // 上一张按钮
+    prevBtn.addEventListener('click', () => {
+      const newIndex = (currentIndex - 1 + sliderItems.length) % sliderItems.length;
+      switchSlider(newIndex);
+    });
+    
+    // 下一张按钮
+    nextBtn.addEventListener('click', () => {
+      const newIndex = (currentIndex + 1) % sliderItems.length;
+      switchSlider(newIndex);
+    });
+    
+    // 自动轮播
+    setInterval(() => {
+      const newIndex = (currentIndex + 1) % sliderItems.length;
+      switchSlider(newIndex);
+    }, autoPlayInterval);
+    </script>
+    <!-- 原有首页内容（约拍+案例区域） -->
+    <section>
+       
+       <!-- 个人名片栏 -->
+       <section class="card-section">
+         <div class="card-container">
+           <!-- 左侧头像 -->
+           <div class="card-avatar">
+             <img src="./src/ima/微信图片_20250925132121_39_337.jpg" alt="倾诚头像">
+           </div>
+           <!-- 中间信息 -->
+           <div class="card-info">
+             <h2>倾诚</h2>
+             <p class="card-tag">自由摄影师 | 偏爱光影与人间烟火</p>
+             <p class="card-style">擅长风格：城市风光 / 人像约拍 / 胶片纪实</p>
+           </div>
+           <!-- 右侧统计 -->
+           <div class="card-stats">
+             <div class="stat-item">
+               <span class="stat-icon">📷</span>
+               <span class="stat-text">拍摄经验：3 年</span>
+             </div>
+             <div class="stat-item">
+               <span class="stat-icon">🎞️</span>
+               <span class="stat-text">已拍作品：100+ 组</span>
+             </div>
+           </div>
+         </div>
+       </section>
+
+       <!-- 3. 案例表格 -->
+       <section class="case-table">
+           <table>
+               <thead>
+                   <tr>
+                       <th>案例一</th>
+                       <th>案例二</th>
+                       <th>案例三</th>
+                   </tr>
+               </thead>
+               <tbody>
+                   <tr>
+                       <td><img src="src/IMG20240426093510.jpg" width="300" height="200" alt="案例一"></td>
+                       <td><img src="src/ima/4.jpg" width="300" height="200" alt="案例二"></td>
+                       <td><img src="src/ima/5.jpg" width="300" height="200" alt="案例三"></td>
+                   </tr>
+                   <tr>
+                       <td align="center" colspan="3"></td>
+                   </tr>
+                   <tr>
+                       <td><img src="src/ima/6.jpg" width="300" height="200" alt="案例四"></td>
+                       <td><img src="src/ima/7.jpg" width="300" height="200" alt="案例五"></td>
+                       <td><img src="src/ima/8.jpg" width="300" height="200" alt="案例六"></td>
+                   </tr>
+               </tbody>
+           </table>
+       </section>
+       <!-- 摄影故事小模块 -->
+  <div style="max-width:800px; margin:40px auto; padding:25px; background:#f8f9fa; border-left:4px solid #4a90e2; border-radius:4px; line-height:1.8;">
+    <h3 style="margin-top:0; color:#333; font-weight:500;">「为什么按下快门？」</h3>
+    <p style="color:#555; font-size:16px;">
+      留不住的太多啦 —— 走过的路、碰过的小生命、一起吃的饭、遇见过的人，我想让照片替我记住 “它们来过”。可后来懂了：照片能存画面，存不住时光。季节会换，人只和想念的人常伴。
+      <span style="color:#4a90e2; font-weight:600;">摄影不是记录风景，而是留住某一刻的心跳。</span>
+    </p>
+  </div>
+       
+       
+       <footer style=" padding:20px 0; text-align:center; margin-top:30px; border-top:1px solid #eee;">
+         <div style="max-width:1200px; margin:0 auto;">
+           <p>© 2025 倾城的个人网站 | 自由摄影师作品展示</p>
+           <p style="margin:8px 0;">联系方式：c2196353107 @倾城 | 约拍邮箱：2196353107@qq.com</p>
+           <p style="font-size:12px; color:#999;">本网站作品均为原创，未经授权禁止商用转载</p>
+         </div>
+       </footer>
+       
+    </section>
+    <script>
+    // 页面加载时检查LocalStorage
+    window.onload = function() {
+      const popup = document.getElementById('welcomePopup');
+      const closeBtn = document.getElementById('closeBtn');
+      const hasShown = localStorage.getItem('popupShown'); // 读取标记
+    
+      // 若未显示过 → 展示弹窗
+      if (!hasShown) {
+        popup.style.display = 'block';
+        localStorage.setItem('popupShown', 'true'); // 记录“已显示”
+      }
+    
+      // 点击关闭按钮隐藏弹窗
+      closeBtn.onclick = function() {
+        popup.style.display = 'none';
+      };
+    };
+    </script>
+</body>
+</html>

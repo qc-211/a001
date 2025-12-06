@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<form action="" method="post">
+		<div>
+			<h1>个人信息</h1>
+		</div>
+		<div>
+			<label>头像:<input type="file" name="pic" id="avatarFile" accept="image/*" onchange="previewAvatar(this)"></label>
+		</div>
+        <div>
+            <div id="avatarPreview" style="margin-top: 10px;width: 100px;height: 100px;border: 1px solid #ccc;"></div>
+        </div>
+        <script>
+        function previewAvatar(fileInput) {
+          const file = fileInput.files[0];
+          if (!file || !file.type.startsWith('image/')) {
+            alert('请选择图片文件');
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const img = document.createElement('img');
+            img.src = e.target.result; 
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'cover'; 
+            const previewContainer = document.getElementById('avatarPreview');
+            previewContainer.innerHTML = '';
+            previewContainer.appendChild(img);
+          };
+          reader.readAsDataURL(file);
+        }
+        </script>
+		<div>
+			<label>个人说明:<textarea name="desc" rows="5" cols="50" maxlength="150" placeholder="不超过150字"></textarea></label>
+		</div>
+		<div>
+			<label>设备:</label>
+			<label><input type="radio" name="sex" value="man">手机</label>
+			<label><input type="radio" name="sex" value="woman">相机</label>
+		</div>
+		<div>
+			<label>喜欢拍什么:</label>
+			<label><input type="checkbox" name="" value="man">风景</label>
+			<label><input type="checkbox" name="" value="man">人像</label>
+			<label><input type="checkbox" name="" value="man">动物</label>
+			<label><input type="checkbox" name="" value="man">水货</label>
+			<label><input type="checkbox" name="" value="man">建筑</label>
+		</div>
+		<div>
+			<label>邮箱:<input type="email"/></label>
+		</div>
+		<div>
+			<label>电话号码:<input type="tel"/></label>
+		</div>
+		<div>
+			<input type="submit" value="提交"/>
+		</div>
+		</form>
+	</body>
+</html>

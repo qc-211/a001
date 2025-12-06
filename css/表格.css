@@ -1,0 +1,35 @@
+
+        .case-table table {       
+          width: 100%;
+          max-width: 1200px;
+          margin: 0 auto;
+          border-collapse: separate; /* 实现圆角 */
+          border-spacing: 0;
+          border-radius: 8px;
+          overflow: hidden;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .case-table th {
+          background-color: #3498db; /* 表头蓝色底色 */
+          color: #fff; /* 表头文字白色 */
+          font-weight: 500;
+          padding: 14px;
+          text-align: center;
+        }
+        .case-table td {
+          padding: 12px;
+          text-align: center;
+          border-bottom: 1px solid #eee;
+          background-color: #fff;
+        }
+        .case-table tr:last-child td {
+          border-bottom: none;
+        }
+        .case-table tr:hover td {        /* 表格行 hover 效果 */
+          background-color: #f8fafc;
+        }
+        .case-table td[colspan] {        /* 合并单元格美化 */
+          background-color: #f1f5f9;
+          font-weight: 500;
+          color: #2c3e50;
+        }

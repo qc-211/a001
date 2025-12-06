@@ -1,0 +1,77 @@
+<!DOCTYPE html> 
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <style>
+            body {
+                margin: 0;
+                padding: 20px;
+                background: linear-gradient(0deg,#ace0f9 0%,#fff1eb  100%);
+                min-height: 100vh;
+            }
+        			form{
+        				width: 500px;
+        				margin: 0 auto;
+        				background-color: #eeeeee;
+        				text-align: center;
+        				border: 1px solid#000000;
+        				border-radius: 20px;
+        				overflow: hidden;
+        				box-shadow: 2px 2px 4px #666666;
+        			}
+        			form h1{
+        				padding: 20px 0;
+        				margin: 0;
+        				background-color: #002752;
+        				color: #ffffff;
+        			}
+        			form input{
+        				font-size: 20px;
+        				line-height: 2em;
+        			}
+        			form div{
+        				margin: 0 0 40px 0;
+        			}
+        		</style>
+		<script>
+		function checkLogin() {
+		    var pass1 = document.getElementById("password1").value;
+		    var pass2 = document.getElementById("password2").value;
+		    // 简单验证
+		    if (pass1 === "qc2196353107" && pass2 === "123456") {
+		        alert("登录成功，点击跳转");
+		        window.location.href="首页.html";
+		    } else {
+		        alert("账号或密码错误");
+		        return false;
+		    }
+		}
+		</script>
+    </head>
+    <body>
+        <form action="" method="post">
+            <div>
+                <h1>注册</h1>
+            </div>
+            <div>
+                <label for="username">注册账号：</label>
+                <input type="text" name="" id="username" aria-placeholder="1" required pattern="^[a-z0-9_-]{3,16}$"/>
+            </div>
+            <div>
+                 <label for="password1">注册密码：</label>
+                <input type="password" name="" id="password1" aria-placeholder="1" required pattern="^[a-zA-Z0-9]{3,16}$"/>
+            </div>
+            <div>
+                <label for="password2">注册密码：</label>
+                <input type="password" name="" id="password2" aria-placeholder="1" required pattern="^[a-zA-Z0-9]{3,16}$"/>
+            </div>
+            <div>
+                <a href="登录.html">已有账号，前往登陆页面</a>
+            </div>
+            <div>
+                <input type="submit" value="注册">
+            </div>
+        </form>
+    </body>
+</html> 

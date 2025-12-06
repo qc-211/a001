@@ -1,0 +1,49 @@
+
+       .card-section {
+         background-color: #f8fafc; /* 浅色系背景，适配你网站风格 */
+         padding: 40px 0;
+       }
+       .card-container {
+         width: 80%;
+         margin: 0 auto;
+         display: flex;
+         align-items: center;
+         gap: 30px;
+       }
+       .card-avatar img {
+         width: 120px;
+         height: 120px;
+         border-radius: 10%; /* 圆形头像 */
+         object-fit: cover;
+         border: 3px solid #e6f7ff;
+       }
+       .card-info h2 {
+         font-size: 28px;
+         margin: 0 0 10px 0;
+         color: #333;
+       }
+       .card-tag {
+         font-size: 16px;
+         color: #666;
+         margin: 0 0 8px 0;
+       }
+       .card-style {
+         font-size: 14px;
+         color: #888;
+         margin: 0;
+       }
+       .card-stats {
+         margin-left: auto;
+         display: flex;
+         gap: 20px;
+       }
+       .stat-item {
+         text-align: center;
+         font-size: 14px;
+         color: #555;
+       }
+       .stat-icon {
+         font-size: 20px;
+         margin-bottom: 5px;
+         display: block;
+       }
