@@ -1,38 +1,376 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title></title>
-        <link rel="stylesheet" href="./css/导航栏.css">
-        <style>
-            body {
-                margin: 0;
-                padding: 20px;
-                background: linear-gradient(0deg,#ace0f9 0%,#fff1eb  100%);
-                min-height: 100vh;
-            }
-            </style>
-    </head>
-    <body>
-        <!-- 导航栏（插入到页面顶部） -->
-        <header class="header clear-fix">
-            <div class="header-left clear-fix">
-                <h1 class="logo">倾城的个人网站</h1>
-                <nav class="nav">
-                    <a class="nav-item" href="./首页.html">首页</a>
-                    <a class="nav-item" href="./列表.html">精选作品</a>
-                    <a class="nav-item nav-active" href="#">作品集</a>
-                    <a class="nav-item" href="./约拍.html">约拍须知</a>
-                    <a class="nav-item" href="./个人中心.html">个人中心</a>
-                </nav>
-            </div>
-            <div class="header-right">
-                <div class="header-right-unlogined">
-                    <a href="./登录.html" class="btn-login">登录</a>
-                    <a href="./注册.html" class="btn-reg">注册</a>
-                </div>
-            </div>
-            </header>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作品集 - 倾城的个人网站</title>
+    <link rel="stylesheet" href="./css/navigation.css">
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --primary-dark: #357abd;
+            --bg-gradient: linear-gradient(0deg, #ace0f9 0%, #fff1eb 100%);
+            --text-dark: #333;
+            --text-light: #666;
+            --white: #ffffff;
+            --gray-100: #f5f5f5;
+            --gray-200: #eeeeee;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.15);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
 
-    </body>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+        }
+
+        main {
+            padding: 40px 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 36px;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .section-subtitle {
+            color: var(--text-light);
+            font-size: 16px;
+        }
+
+        /* 作品集网格 */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+
+        .portfolio-item {
+            position: relative;
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .portfolio-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+       /* 在作品集.html的<style>部分修改 */
+       .portfolio-item img {
+           width: 100%;
+
+           aspect-ratio: 4/3; /* 统一比例容器 */
+           object-fit: contain; /* 改为contain显示完整图片 */
+           background: var(--gray-100); /* 添加背景色 */
+       }
+
+
+        .portfolio-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .portfolio-item:hover .portfolio-overlay {
+            opacity: 1;
+        }
+
+        .overlay-content {
+            text-align: center;
+            color: var(--white);
+        }
+
+        .overlay-content h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .overlay-content p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* 分类标签 */
+        .category-tags {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 8px 16px;
+            background: var(--white);
+            border-radius: 20px;
+            font-size: 14px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .tag.active {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .tag:hover:not(.active) {
+            background: var(--gray-100);
+        }
+
+        /* 图片预览模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90vh;
+            position: relative;
+        }
+
+        .modal-img {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: var(--white);
+            font-size: 30px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载动画 -->
+    <div class="loading-container">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- 导航栏 -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">倾城的个人网站</h1>
+            <button class="menu-toggle">☰</button>
+            <nav class="nav">
+                <a class="nav-item" href="./首页.html">首页</a>
+                <a class="nav-item" href="./列表.html">精选作品</a>
+                <a class="nav-item nav-active" href="#">作品集</a>
+                <a class="nav-item" href="./约拍.html">约拍须知</a>
+                <a class="nav-item" href="./个人中心.html">个人中心</a>
+            </nav>
+            <div class="header-right">
+                <a href="./登录.html" class="btn-login">登录</a>
+                <a href="./注册.html" class="btn-reg">注册</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="section-header">
+                <h1 class="section-title">作品集</h1>
+                <p class="section-subtitle">完整记录每一次快门背后的故事</p>
+            </div>
+
+            <!-- 分类筛选 -->
+            <div class="category-tags">
+                <div class="tag active" data-category="all">全部作品</div>
+                <div class="tag" data-category="portrait">人像</div>
+                <div class="tag" data-category="landscape">风景</div>
+                <div class="tag" data-category="street">街拍</div>
+                <div class="tag" data-category="nature">自然</div>
+            </div>
+
+            <!-- 作品集网格 -->
+            <div class="portfolio-grid" id="portfolioGrid">
+                <!-- 图片将通过JS动态加载 -->
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <h3>倾城的个人网站</h3>
+            <p class="footer-desc">用镜头捕捉生活中的美好瞬间，记录时光的痕迹</p>
+            <div class="divider"></div>
+            <p class="copyright">© 2025 倾城的个人网站 | 自由摄影师作品展示</p>
+            <p class="copyright">联系方式：2196353107@qq.com | 约拍请私信</p>
+        </div>
+    </footer>
+
+    <!-- 图片预览模态框 -->
+    <div class="modal" id="imageModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">×</button>
+            <img src="" alt="" class="modal-img" id="modalImg">
+        </div>
+    </div>
+
+    <!-- 回到顶部 -->
+    <button class="back-to-top">↑</button>
+
+    <script>
+        // 作品集数据
+        const portfolioData = [
+            { src: './src/ima/4.jpg', title: '城市印象', category: 'street' },
+            { src: './src/ima/5.jpg', title: '光影人像', category: 'portrait' },
+            { src: './src/ima/6.jpg', title: '建筑线条', category: 'landscape' },
+            { src: './src/ima/7.jpg', title: '自然之美', category: 'nature' },
+            { src: './src/ima/8.jpg', title: '青春记忆', category: 'portrait' },
+            { src: './src/IMG_4306.jpg', title: '黄昏时分', category: 'landscape' },
+            { src: './src/IMG20240212182948.jpg', title: '街头故事', category: 'street' },
+            { src: './src/IMG20240426093510.jpg', title: '城市夜景', category: 'landscape' },
+            { src: './src/IMG20241103093522.jpg', title: '光影瞬间', category: 'portrait' },
+            { src: './src/IMG20241231182918.jpg', title: '自然光影', category: 'nature' },
+            { src: './src/IMG20250205215132.jpg', title: '猫咪物语', category: 'nature' },
+            { src: './src/IMG_20240204_144317.jpg', title: '喵星人', category: 'nature' },
+            { src: './src/IMG_20240211_144249.jpg', title: '慵懒午后', category: 'nature' },
+            { src: './src/IMG_20240403_210820.jpg', title: '城市角落', category: 'street' },
+            { src: './src/IMG_20241002_112036.jpg', title: '人像写真', category: 'portrait' }
+        ];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => document.body.classList.add('loaded'), 300);
+            
+            initMobileMenu();
+            initBackToTop();
+            initFilter();
+            initImagePreview();
+            renderPortfolio('all');
+        });
+
+        function initMobileMenu() {
+            const toggle = document.querySelector('.menu-toggle');
+            const nav = document.querySelector('.nav');
+            
+            toggle.addEventListener('click', () => {
+                nav.classList.toggle('active');
+                toggle.textContent = nav.classList.contains('active') ? '✕' : '☰';
+            });
+        }
+
+        function initBackToTop() {
+            const btn = document.querySelector('.back-to-top');
+            window.addEventListener('scroll', () => {
+                btn.classList.toggle('visible', window.scrollY > 300);
+            });
+            btn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        function renderPortfolio(category) {
+            const grid = document.getElementById('portfolioGrid');
+            grid.innerHTML = '';
+            
+            const filtered = category === 'all' 
+                ? portfolioData 
+                : portfolioData.filter(item => item.category === category);
+            
+            filtered.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'portfolio-item';
+                div.innerHTML = `
+                    <img src="${item.src}" alt="${item.title}">
+                    <div class="portfolio-overlay">
+                        <div class="overlay-content">
+                            <h3>${item.title}</h3>
+                            <p>点击查看大图</p>
+                        </div>
+                    </div>
+                `;
+                div.addEventListener('click', () => openModal(item));
+                grid.appendChild(div);
+            });
+        }
+
+        function initFilter() {
+            const tags = document.querySelectorAll('.tag');
+            tags.forEach(tag => {
+                tag.addEventListener('click', () => {
+                    tags.forEach(t => t.classList.remove('active'));
+                    tag.classList.add('active');
+                    renderPortfolio(tag.dataset.category);
+                });
+            });
+        }
+
+        function initImagePreview() {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            const closeBtn = document.getElementById('modalClose');
+
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+
+            function closeModal() {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+
+            window.openModal = function(item) {
+                modalImg.src = item.src;
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            };
+        }
+    </script>
+</body>
 </html>

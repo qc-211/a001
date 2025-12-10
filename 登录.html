@@ -1,81 +1,270 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<title>登录</title>
-        <link rel="stylesheet" href="/css/登录.css">
-        
-        
-        <style>
-            body {
-                margin: 0;
-                padding: 20px;
-                background: linear-gradient(0deg,#ace0f9 0%,#fff1eb  100%);
-                min-height: 100vh;
-            }
-        			form{
-        				width: 500px;
-        				margin: 0 auto;
-        				background-color: #eeeeee;
-        				text-align: center;
-        				border: 1px solid#000000;
-        				border-radius: 20px;
-        				overflow: hidden;
-        				box-shadow: 2px 2px 4px #666666;
-        			}
-        			form h1{
-        				padding: 20px 0;
-        				margin: 0;
-        				background-color: #002752;
-        				color: #ffffff;
-        			}
-        			form input{
-        				font-size: 20px;
-        				line-height: 2em;
-        			}
-        			form div{
-        				margin: 0 0 40px 0;
-        			}
-        		</style>
-        <script>
-        function checkLogin() {
-            var user = document.getElementById("username").value;
-            var pass = document.getElementById("password").value;
-            
-            // 简单验证
-            if (user === "qc2196" && pass === "123456") {
-                alert("登录成功，点击跳转");
-                window.location.href="首页.html";
-            } else {
-                alert("账号或密码错误");
-                return false;
-            }
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 倾城的个人网站</title>
+    <style>
+        /* 继承首页变量 */
+        :root {
+            --primary: #4a90e2;
+            --primary-dark: #357abd;
+            --bg-gradient: linear-gradient(0deg, #ace0f9 0%, #fff1eb 100%);
+            --text-dark: #333;
+            --text-light: #666;
+            --white: #ffffff;
+            --gray-100: #f5f5f5;
+            --gray-200: #eeeeee;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --transition: all 0.3s ease;
         }
-        </script>
-	</head>
-	<body>
-		<form action="" method="post">
-			<div>
-				<h1 class="">登录</h1>
-			</div>
-			<div>
-				<label for="username">账号:</label>
-				<input type="text" name="" id="username" placeholder="请输入账号" required pattern="/^[a-z0-9]{3,16}$/">
-			</div>
-			<div>
-				<label for="password">密码:</label>
-				<input type="password" name="" id="password" placeholder="请输入密码" required pattern="/^[a-zA-Z0-9]{3,16}$/">
-			</div>
-            <div> 
-                <button id="link" href=" " onclick="checkLogin()">登录</button>
-			
-			</div>
-			<div class="preview-element">
-               
-				<a href="注册.html">没有账号？前往注册页面</a>
-			</div>
-		</form>
-        <h5>账号：qc2196</h5>
-        <h5>密码：123456</h5>
-	</body>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* 登录卡片 */
+        .login-card {
+            width: 100%;
+            max-width: 450px;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .login-header {
+            background: var(--primary-dark);
+            color: var(--white);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .login-header h1 {
+            font-size: 28px;
+            margin: 0;
+        }
+
+        .login-body {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .form-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .demo-credentials {
+            background: rgba(74, 144, 226, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .demo-credentials h5 {
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        /* 加载动画 */
+        .loading-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        body.loaded .loading-container {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--gray-100);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载动画 -->
+    <div class="loading-container">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div class="login-card">
+        <div class="login-header">
+            <h1>用户登录</h1>
+        </div>
+        <div class="login-body">
+            <form id="loginForm" method="post">
+                <div class="form-group">
+                    <label for="username">账号</label>
+                    <input type="text" id="username" placeholder="请输入账号" required>
+                    <div class="error-message" id="usernameError">请输入正确的账号格式</div>
+                </div>
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" placeholder="请输入密码" required>
+                    <div class="error-message" id="passwordError">密码格式不正确</div>
+                </div>
+                <button type="submit" class="btn-primary">登录</button>
+            </form>
+            <div class="demo-credentials">
+                <h5>测试账号</h5>
+                <p>账号：qc2196<br>密码：123456</p>
+            </div>
+            <div class="form-footer">
+                <p>还没有账号？<a href="注册.html">立即注册</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => document.body.classList.add('loaded'), 300);
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const usernameError = document.getElementById('usernameError');
+            const passwordError = document.getElementById('passwordError');
+            
+            // 重置错误信息
+            usernameError.style.display = 'none';
+            passwordError.style.display = 'none';
+            
+            // 验证规则
+            const usernameRegex = /^[a-z0-9]{3,16}$/;
+            const passwordRegex = /^[a-zA-Z0-9]{3,16}$/;
+            
+            let isValid = true;
+            
+            if (!usernameRegex.test(username)) {
+                usernameError.style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!passwordRegex.test(password)) {
+                passwordError.style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            // 登录验证
+            if (username === 'qc2196' && password === '123456') {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('username', username);
+                alert('登录成功！');
+                window.location.href = '首页.html';
+            } else {
+                alert('账号或密码错误，请重试！');
+            }
+        });
+
+        // 回车键提交
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+</body>
 </html>

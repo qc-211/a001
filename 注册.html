@@ -1,77 +1,422 @@
-<!DOCTYPE html> 
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title></title>
-        <style>
-            body {
-                margin: 0;
-                padding: 20px;
-                background: linear-gradient(0deg,#ace0f9 0%,#fff1eb  100%);
-                min-height: 100vh;
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册 - 倾城的个人网站</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --primary-dark: #357abd;
+            --bg-gradient: linear-gradient(0deg, #ace0f9 0%, #fff1eb 100%);
+            --text-dark: #333;
+            --text-light: #666;
+            --white: #ffffff;
+            --gray-100: #f5f5f5;
+            --gray-200: #eeeeee;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+            --error: #e74c3c;
+            --success: #27ae60;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .register-card {
+            width: 100%;
+            max-width: 500px;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .register-header {
+            background: var(--primary-dark);
+            color: var(--white);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .register-header h1 {
+            font-size: 28px;
+            margin: 0;
+        }
+
+        .register-body {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .input-hint {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .form-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .password-strength {
+            height: 4px;
+            background: var(--gray-200);
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s ease;
+        }
+
+        .strength-weak { width: 33.33%; background: var(--error); }
+        .strength-medium { width: 66.66%; background: #f39c12; }
+        .strength-strong { width: 100%; background: var(--success); }
+
+        /* 加载动画 */
+        .loading-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        body.loaded .loading-container {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--gray-100);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载动画 -->
+    <div class="loading-container">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div class="register-card">
+        <div class="register-header">
+            <h1>用户注册</h1>
+        </div>
+        <div class="register-body">
+            <form id="registerForm" method="post">
+                <div class="form-group">
+                    <label for="username">注册账号</label>
+                    <input type="text" id="username" placeholder="请输入3-16位字母或数字" required>
+                    <div class="input-hint">支持小写字母和数字，长度为3-16位</div>
+                    <div class="error-message" id="usernameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">邮箱地址</label>
+                    <input type="email" id="email" placeholder="example@email.com" required>
+                    <div class="error-message" id="emailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">设置密码</label>
+                    <input type="password" id="password" placeholder="请输入6-20位密码" required>
+                    <div class="password-strength" id="passwordStrength">
+                        <div class="strength-bar" id="strengthBar"></div>
+                    </div>
+                    <div class="input-hint">密码长度6-20位，建议包含字母、数字和符号</div>
+                    <div class="error-message" id="passwordError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">确认密码</label>
+                    <input type="password" id="confirmPassword" placeholder="请再次输入密码" required>
+                    <div class="error-message" id="confirmPasswordError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="agreeTerms" required>
+                        我已阅读并同意《用户服务协议》和《隐私政策》
+                    </label>
+                    <div class="error-message" id="termsError"></div>
+                </div>
+
+                <button type="submit" class="btn-primary">立即注册</button>
+            </form>
+
+            <div class="form-footer">
+                <p>已有账号？<a href="登录.html">前往登录</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => document.body.classList.add('loaded'), 300);
+            
+            initFormValidation();
+            initPasswordStrength();
+        });
+
+        function initFormValidation() {
+            const form = document.getElementById('registerForm');
+            const username = document.getElementById('username');
+            const email = document.getElementById('email');
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirmPassword');
+            const agreeTerms = document.getElementById('agreeTerms');
+
+            // 实时验证
+            username.addEventListener('blur', validateUsername);
+            email.addEventListener('blur', validateEmail);
+            password.addEventListener('input', validatePassword);
+            confirmPassword.addEventListener('blur', validateConfirmPassword);
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const isValid = validateUsername() && 
+                               validateEmail() && 
+                               validatePassword() && 
+                               validateConfirmPassword() && 
+                               validateTerms();
+                
+                if (isValid) {
+                    // 模拟注册
+                    const userData = {
+                        username: username.value,
+                        email: email.value,
+                        password: password.value,
+                        registerTime: new Date().toISOString()
+                    };
+                    
+                    localStorage.setItem('user_' + username.value, JSON.stringify(userData));
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('username', username.value);
+                    
+                    alert('注册成功！欢迎加入我们！');
+                    window.location.href = '首页.html';
+                }
+            });
+        }
+
+        function validateUsername() {
+            const username = document.getElementById('username');
+            const error = document.getElementById('usernameError');
+            const regex = /^[a-z0-9]{3,16}$/;
+            
+            if (!regex.test(username.value)) {
+                error.textContent = '账号格式不正确，请输入3-16位小写字母或数字';
+                error.style.display = 'block';
+                return false;
             }
-        			form{
-        				width: 500px;
-        				margin: 0 auto;
-        				background-color: #eeeeee;
-        				text-align: center;
-        				border: 1px solid#000000;
-        				border-radius: 20px;
-        				overflow: hidden;
-        				box-shadow: 2px 2px 4px #666666;
-        			}
-        			form h1{
-        				padding: 20px 0;
-        				margin: 0;
-        				background-color: #002752;
-        				color: #ffffff;
-        			}
-        			form input{
-        				font-size: 20px;
-        				line-height: 2em;
-        			}
-        			form div{
-        				margin: 0 0 40px 0;
-        			}
-        		</style>
-		<script>
-		function checkLogin() {
-		    var pass1 = document.getElementById("password1").value;
-		    var pass2 = document.getElementById("password2").value;
-		    // 简单验证
-		    if (pass1 === "qc2196353107" && pass2 === "123456") {
-		        alert("登录成功，点击跳转");
-		        window.location.href="首页.html";
-		    } else {
-		        alert("账号或密码错误");
-		        return false;
-		    }
-		}
-		</script>
-    </head>
-    <body>
-        <form action="" method="post">
-            <div>
-                <h1>注册</h1>
-            </div>
-            <div>
-                <label for="username">注册账号：</label>
-                <input type="text" name="" id="username" aria-placeholder="1" required pattern="^[a-z0-9_-]{3,16}$"/>
-            </div>
-            <div>
-                 <label for="password1">注册密码：</label>
-                <input type="password" name="" id="password1" aria-placeholder="1" required pattern="^[a-zA-Z0-9]{3,16}$"/>
-            </div>
-            <div>
-                <label for="password2">注册密码：</label>
-                <input type="password" name="" id="password2" aria-placeholder="1" required pattern="^[a-zA-Z0-9]{3,16}$"/>
-            </div>
-            <div>
-                <a href="登录.html">已有账号，前往登陆页面</a>
-            </div>
-            <div>
-                <input type="submit" value="注册">
-            </div>
-        </form>
-    </body>
-</html> 
+            
+            // 检查是否已存在
+            if (localStorage.getItem('user_' + username.value)) {
+                error.textContent = '该账号已被注册，请使用其他账号';
+                error.style.display = 'block';
+                return false;
+            }
+            
+            error.style.display = 'none';
+            return true;
+        }
+
+        function validateEmail() {
+            const email = document.getElementById('email');
+            const error = document.getElementById('emailError');
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!regex.test(email.value)) {
+                error.textContent = '请输入有效的邮箱地址';
+                error.style.display = 'block';
+                return false;
+            }
+            
+            error.style.display = 'none';
+            return true;
+        }
+
+        function validatePassword() {
+            const password = document.getElementById('password');
+            const error = document.getElementById('passwordError');
+            
+            if (password.value.length < 6) {
+                error.textContent = '密码长度至少为6位';
+                error.style.display = 'block';
+                return false;
+            }
+            
+            error.style.display = 'none';
+            updatePasswordStrength(password.value);
+            return true;
+        }
+
+        function validateConfirmPassword() {
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirmPassword');
+            const error = document.getElementById('confirmPasswordError');
+            
+            if (confirmPassword.value !== password.value) {
+                error.textContent = '两次输入的密码不一致';
+                error.style.display = 'block';
+                return false;
+            }
+            
+            error.style.display = 'none';
+            return true;
+        }
+
+        function validateTerms() {
+            const agreeTerms = document.getElementById('agreeTerms');
+            const error = document.getElementById('termsError');
+            
+            if (!agreeTerms.checked) {
+                error.textContent = '请阅读并同意服务协议和隐私政策';
+                error.style.display = 'block';
+                return false;
+            }
+            
+            error.style.display = 'none';
+            return true;
+        }
+
+        function initPasswordStrength() {
+            const password = document.getElementById('password');
+            const strengthContainer = document.getElementById('passwordStrength');
+            const strengthBar = document.getElementById('strengthBar');
+            
+            password.addEventListener('input', () => {
+                updatePasswordStrength(password.value);
+            });
+        }
+
+        function updatePasswordStrength(password) {
+            const strengthContainer = document.getElementById('passwordStrength');
+            const strengthBar = document.getElementById('strengthBar');
+            
+            if (password.length === 0) {
+                strengthContainer.style.display = 'none';
+                return;
+            }
+            
+            strengthContainer.style.display = 'block';
+            
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (password.length >= 12) strength++;
+            if (/[a-z]/.test(password)) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^a-zA-Z0-9]/.test(password)) strength++;
+            
+            strengthBar.className = 'strength-bar';
+            
+            if (strength <= 2) {
+                strengthBar.classList.add('strength-weak');
+            } else if (strength <= 4) {
+                strengthBar.classList.add('strength-medium');
+            } else {
+                strengthBar.classList.add('strength-strong');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,137 +1,390 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>精选作品</title>
-        <link rel="stylesheet" href="./css/列表1.css">
-        <link rel="stylesheet" href="./css/列表2.css">
-        <link rel="stylesheet" href="./css/列表3.css">
-        <link rel="stylesheet" href="./css/导航栏.css">
-        <style>
-               body {
-                   margin: 0;
-                   padding: 20px;
-                   background: linear-gradient(0deg,#ace0f9 0%,#fff1eb  100%);
-                   min-height: 100vh;
-               }
-               
-              .works-section {
-                padding: 50px 0;
-                background-color: #fff;
-              }
-              .works-title {
-                text-align: center;
-                font-size: 22px;
-                color: #333;
-                margin: 0 0 30px 0;
-              }
-              .work-card {
-                border-radius: 8px;
-                overflow: hidden;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                transition: transform 0.3s;
-              }
-              .work-card img {
-                width: 100%;
-                height: 200px;
-                object-fit: cover;
-              }
-              .work-label {
-                padding: 10px;
-                font-size: 14px;
-                color: #666;
-                margin: 0;
-                text-align: center;
-              }
-           </style>
-    </head>
-    <body>
-        <!-- 导航栏（插入到页面顶部） -->
-        <header class="header clear-fix">
-            <div class="header-left clear-fix">
-                <h1 class="logo">倾城的个人网站</h1>
-                <nav class="nav">
-                    <a class="nav-item" href="./首页.html">首页</a>
-                    <a class="nav-item nav-active" href="./列表.html">精选作品</a>
-                    <a class="nav-item" href="./作品集.html">作品集</a>
-                    <a class="nav-item" href="./约拍.html">约拍须知</a>
-                    <a class="nav-item" href="./个人中心.html">个人中心</a>
-                </nav>
-            </div>
-            <div class="header-right">
-                <div class="header-right-unlogined">
-                    <a href="./登录.html" class="btn-login">登录</a>
-                    <a href="./注册.html" class="btn-reg">注册</a>
-                </div>
-            </div>
-        </header>
-        <section class="links">
-             <h3 class="works-title">「我的镜头里，藏着这些故事」</h3>
-            <ol class="clear-fix">
-                <li> <!-- 卡片1 -->
-                      <div class="work-card">
-                        <img src="./src/IMG_20240404_203935.jpg" alt="重庆夜景">
-                        <p class="work-label">2022・奉节职教</p>
-                      </div></li>
-                <li> 
-                 <!-- 卡片1 -->
-                      <div class="work-card">
-                        <img src="./src/IMG_20240403_210820.jpg" alt="重庆夜景">
-                        <p class="work-label">2022・奉节职教</p>
-                      </div>
-                </li>
-                <li>  <!-- 卡片1 -->
-                      <div class="work-card">
-                        <img src="./src/CRall_20230917_100431043.jpg" alt="重庆夜景">
-                        <p class="work-label">2023・重庆广达</p>
-                      </div></li>
-                <li>  <!-- 卡片1 -->
-                      <div class="work-card">
-                        <img src="./src/IMG20251125173404.jpg" alt="重庆夜景">
-                        <p class="work-label">2025・重庆建工</p>
-                      </div></li>
-                <li>  <!-- 卡片1 -->
-                      <div class="work-card">
-                        <img src="./src/IMG20250319181807.jpg" alt="重庆夜景">
-                        <p class="work-label">2025・广东东莞</p>
-                      </li>
-                <li>  <!-- 卡片1 -->
-                      <div class="work-card">
-                        <img src="./src/IMG20240212182948.jpg" alt="重庆夜景">
-                        <p class="work-label">2024・重庆奉节</p>
-                      </div></li>
-                <li>  <!-- 卡片1 -->
-                      <div class="work-card">
-                        <img src="./src/IMG20250205215132.jpg" alt="重庆夜景">
-                        <p class="work-label">2023・猫</p>
-                      </div></li>
-                <li>  <!-- 卡片1 -->
-                      <div class="work-card">
-                        <img src="./src/IMG_20240204_144317.jpg" alt="重庆夜景">
-                        <p class="work-label">2023・猫</p>
-                      </div></li>
-                <li> <!-- 卡片1 -->
-                      <div class="work-card">
-                        <img src="./src/IMG_20240211_144249.jpg" alt="重庆夜景">
-                        <p class="work-label">2023・猫</p>
-                      </div></li>
-                <li>  <!-- 卡片1 -->
-                      <div class="work-card">
-                        <img src="./src/CRall_20230929_125636266.jpg" alt="重庆夜景">
-                        <p class="work-label">2022・重庆夜景</p>
-                      </div></li>
-                <li>  <!-- 卡片1 -->
-                      <div class="work-card">
-                        <img src="./src/CRall_20230929_130850624.jpg" alt="重庆夜景">
-                        <p class="work-label">2022・重庆夜景</p>
-                      </div></li>
-                <li> <!-- 卡片1 -->
-                      <div class="work-card">
-                        <img src="./src/CRall_20230929_135926367.jpg" alt="重庆夜景">
-                        <p class="work-label">2022・重庆夜景</p>
-                      </div></li>
-            </ol>
+<html lang="zh-CN">
+<head>
+<link rel="stylesheet" href="./css/navigation.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>精选作品 - 倾城的个人网站</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --primary-dark: #357abd;
+            --bg-gradient: linear-gradient(0deg, #ace0f9 0%, #fff1eb 100%);
+            --text-dark: #333;
+            --text-light: #666;
+            --white: #ffffff;
+            --gray-100: #f5f5f5;
+            --gray-200: #eeeeee;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.15);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
 
-        </section>
-    </body>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+        }
+
+        main {
+            padding: 40px 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 36px;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .section-subtitle {
+            color: var(--text-light);
+            font-size: 16px;
+        }
+
+        /* 作品网格 */
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .work-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .work-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .work-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .work-card:hover .work-image {
+            transform: scale(1.05);
+        }
+
+        .work-info {
+            padding: 20px;
+        }
+
+        .work-title {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .work-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .work-location {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* 分类筛选 */
+        .filter-bar {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tag {
+            padding: 10px 20px;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .filter-tag.active {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        .filter-tag:hover:not(.active) {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* 图片预览模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90vh;
+            position: relative;
+        }
+
+        .modal-img {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: var(--white);
+            font-size: 30px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .modal-info {
+            position: absolute;
+            bottom: -60px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: var(--white);
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载动画 -->
+    <div class="loading-container">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- 导航栏 -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">倾城的个人网站</h1>
+            <button class="menu-toggle">☰</button>
+            <nav class="nav">
+                <a class="nav-item" href="./首页.html">首页</a>
+                <a class="nav-item nav-active" href="#">精选作品</a>
+                <a class="nav-item" href="./作品集.html">作品集</a>
+                <a class="nav-item" href="./约拍.html">约拍须知</a>
+                <a class="nav-item" href="./个人中心.html">个人中心</a>
+            </nav>
+            <div class="header-right">
+                <a href="./登录.html" class="btn-login">登录</a>
+                <a href="./注册.html" class="btn-reg">注册</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="section-header">
+                <h1 class="section-title">精选作品</h1>
+                <p class="section-subtitle">「我的镜头里，藏着这些故事」</p>
+            </div>
+
+            <!-- 分类筛选 -->
+            <div class="filter-bar">
+                <div class="filter-tag active" data-category="all">全部</div>
+                <div class="filter-tag" data-category="city">城市风光</div>
+                <div class="filter-tag" data-category="portrait">人像约拍</div>
+                <div class="filter-tag" data-category="nature">自然风光</div>
+                <div class="filter-tag" data-category="street">街头纪实</div>
+            </div>
+
+            <!-- 作品网格 -->
+            <div class="works-grid" id="worksGrid">
+                <!-- 作品将通过JS动态加载 -->
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <h3>倾城的个人网站</h3>
+            <p class="footer-desc">用镜头捕捉生活中的美好瞬间，记录时光的痕迹</p>
+            <div class="divider"></div>
+            <p class="copyright">© 2025 倾城的个人网站 | 自由摄影师作品展示</p>
+            <p class="copyright">联系方式：2196353107@qq.com | 约拍请私信</p>
+        </div>
+    </footer>
+
+    <!-- 图片预览模态框 -->
+    <div class="modal" id="imageModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">×</button>
+            <img src="" alt="" class="modal-img" id="modalImg">
+            <div class="modal-info" id="modalInfo"></div>
+        </div>
+    </div>
+
+    <!-- 回到顶部 -->
+    <button class="back-to-top">↑</button>
+
+    <script>
+        // 作品数据
+        const worksData = [
+            { src: './src/IMG_20240404_203935.jpg', title: '奉节职教', location: '2022・奉节职教', category: 'city' },
+            { src: './src/IMG_20240403_210820.jpg', title: '校园时光', location: '2022・奉节职教', category: 'portrait' },
+            { src: './src/CRall_20230917_100431043.jpg', title: '广达厂区', location: '2023・重庆广达', category: 'city' },
+            { src: './src/IMG20251125173404.jpg', title: '建工记忆', location: '2025・重庆建工', category: 'street' },
+            { src: './src/IMG20250319181807.jpg', title: '东莞印象', location: '2025・广东东莞', category: 'city' },
+            { src: './src/IMG20240212182948.jpg', title: '奉节街拍', location: '2024・重庆奉节', category: 'street' },
+            { src: './src/IMG20250205215132.jpg', title: '猫咪日常', location: '2023・猫', category: 'nature' },
+            { src: './src/IMG_20240204_144317.jpg', title: '喵星人', location: '2023・猫', category: 'nature' },
+            { src: './src/IMG_20240211_144249.jpg', title: '慵懒午后', location: '2023・猫', category: 'nature' },
+            { src: './src/CRall_20230929_125636266.jpg', title: '山城夜色', location: '2022・重庆夜景', category: 'city' },
+            { src: './src/CRall_20230929_130850624.jpg', title: '洪崖洞夜景', location: '2022・重庆夜景', category: 'city' },
+            { src: './src/CRall_20230929_135926367.jpg', title: '解放碑', location: '2022・重庆夜景', category: 'city' }
+        ];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => document.body.classList.add('loaded'), 300);
+            
+            initMobileMenu();
+            initBackToTop();
+            initFilter();
+            initImagePreview();
+            renderWorks('all');
+        });
+
+        function initMobileMenu() {
+            const toggle = document.querySelector('.menu-toggle');
+            const nav = document.querySelector('.nav');
+            
+            toggle.addEventListener('click', () => {
+                nav.classList.toggle('active');
+                toggle.textContent = nav.classList.contains('active') ? '✕' : '☰';
+            });
+        }
+
+        function initBackToTop() {
+            const btn = document.querySelector('.back-to-top');
+            window.addEventListener('scroll', () => {
+                btn.classList.toggle('visible', window.scrollY > 300);
+            });
+            btn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        function renderWorks(category) {
+            const grid = document.getElementById('worksGrid');
+            grid.innerHTML = '';
+            
+            const filteredWorks = category === 'all' 
+                ? worksData 
+                : worksData.filter(work => work.category === category);
+            
+            filteredWorks.forEach(work => {
+                const card = document.createElement('div');
+                card.className = 'work-card';
+                card.innerHTML = `
+                    <img src="${work.src}" alt="${work.title}" class="work-image">
+                    <div class="work-info">
+                        <h3 class="work-title">${work.title}</h3>
+                        <div class="work-meta">
+                            <span class="work-location">📍 ${work.location}</span>
+                            <span class="work-category">${getCategoryName(work.category)}</span>
+                        </div>
+                    </div>
+                `;
+                card.addEventListener('click', () => openModal(work));
+                grid.appendChild(card);
+            });
+        }
+
+        function getCategoryName(category) {
+            const names = {
+                city: '城市风光',
+                portrait: '人像约拍',
+                nature: '自然风光',
+                street: '街头纪实'
+            };
+            return names[category] || '其他';
+        }
+
+        function initFilter() {
+            const tags = document.querySelectorAll('.filter-tag');
+            tags.forEach(tag => {
+                tag.addEventListener('click', () => {
+                    tags.forEach(t => t.classList.remove('active'));
+                    tag.classList.add('active');
+                    renderWorks(tag.dataset.category);
+                });
+            });
+        }
+
+        function initImagePreview() {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            const modalInfo = document.getElementById('modalInfo');
+            const closeBtn = document.getElementById('modalClose');
+
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+
+            function closeModal() {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+
+            window.openModal = function(work) {
+                modalImg.src = work.src;
+                modalInfo.innerHTML = `<h3>${work.title}</h3><p>${work.location}</p>`;
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            };
+        }
+    </script>
+</body>
 </html>

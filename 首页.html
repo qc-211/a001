@@ -1,223 +1,872 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
+    
     <meta charset="utf-8">
-    <title>首页</title>
-    <link rel="stylesheet" href="./css/导航栏.css">
-    <link rel="stylesheet" href="./css/图片切换.css">
-    <link rel="stylesheet" href="./css/个人简介.css">
-    <link rel="stylesheet" href="./css/表格.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>倾城的个人网站</title>
+    <link rel="stylesheet" href="./css/navigation.css">
     <style>
-        body {
+        /* ==================== CSS变量与全局样式 ==================== */
+        :root {
+            --primary: #4a90e2;
+            --primary-dark: #357abd;
+            --bg-gradient: linear-gradient(0deg, #ace0f9 0%, #fff1eb 100%);
+            --text-dark: #333;
+            --text-light: #666;
+            --white: #ffffff;
+            --gray-100: #f5f5f5;
+            --gray-200: #eeeeee;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.15);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
-            padding: 20px;
-            background: linear-gradient(0deg,#ace0f9 0%,#fff1eb  100%);
+            padding: 0;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            color: var(--text-dark);
+            background: var(--bg-gradient);
             min-height: 100vh;
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .clear-fix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        /* ==================== 加载动画 ==================== */
+        .loading-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        body.loaded .loading-container {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--gray-100);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-dark);
+        }
+
+        .header-right a {
+            margin-left: 15px;
+            padding: 8px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .btn-login {
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-login:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-reg {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-reg:hover {
+            background: var(--primary-dark);
+        }
+
+        /* ==================== 轮播图 ==================== */
+        .fullscreen-slider {
+            position: relative;
+            height: 80vh;
+            min-height: 500px;
+            overflow: hidden;
+        }
+
+        .slider-wrapper {
+            position: relative;
+            height: 100%;
+        }
+
+        .slider-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .slider-item.active {
+            opacity: 1;
+        }
+
+        .slider-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slider-text {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: var(--white);
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+            z-index: 5;
+        }
+
+        .slider-title {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: var(--white);
+            z-index: 5;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+        }
+
+        .slider-title h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .slider-title p {
+            font-size: 20px;
+        }
+
+        .slider-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: var(--white);
+            font-size: 24px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 10;
+        }
+
+        .slider-control:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .prev-control { left: 30px; }
+        .next-control { right: 30px; }
+
+        .slider-dots {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .slider-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .slider-dot.active {
+            background: var(--white);
+            width: 30px;
+            border-radius: 5px;
+        }
+
+        /* ==================== 内容区域 ==================== */
+        main {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 40px;
+            color: var(--text-dark);
+        }
+
+        /* 个人名片 */
+        .card-container {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            padding: 40px;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 60px;
+        }
+
+        .card-avatar img {
+            width: 120px;
+            height: 120px;
+            border-radius: 10%;
+            object-fit: cover;
+            border: 4px solid var(--primary);
+        }
+
+        .card-info h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        .card-tag {
+            color: var(--primary);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .card-style {
+            color: var(--text-light);
+        }
+
+        .card-stats {
+            margin-left: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-light);
+        }
+
+        /* 作品筛选 */
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: var(--gray-100);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .filter-btn:hover:not(.active) {
+            background: var(--gray-200);
+        }
+
+        /* 图片网格 */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .case-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        .case-img:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+    
+
+        /* 页脚 */
+        .footer {
+            background: var(--text-dark);
+            color: var(--white);
+            padding: 40px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .footer-content h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .footer-desc {
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 20px;
+        }
+
+        .divider {
+            width: 100px;
+            height: 2px;
+            background: var(--primary);
+            margin: 20px auto;
+        }
+
+        .copyright {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            margin: 5px 0;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+            z-index: 999;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 图片预览模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90vh;
+            position: relative;
+        }
+
+        .modal-img {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: var(--white);
+            font-size: 30px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        /* ==================== 响应式设计 ==================== */
+        @media (max-width: 768px) {
+            .header .container {
+                flex-wrap: wrap;
+            }
+
+            .menu-toggle {
+                display: block;
+                margin-left: auto;
+            }
+
+            .nav {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--white);
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: var(--shadow);
+            }
+
+            .nav.active {
+                display: flex;
+            }
+
+            .header-right {
+                display: none;
+            }
+
+            .slider-title h1 {
+                font-size: 32px;
+            }
+
+            .slider-title p {
+                font-size: 16px;
+            }
+
+            .card-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .card-stats {
+                margin-left: 0;
+            }
+
+            .image-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+
+            .counter {
+                font-size: 36px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- 导航栏（插入到页面顶部） -->
+    <!-- 加载动画 -->
+    <div class="loading-container">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- 导航栏 -->
     <header class="header clear-fix">
-        <div class="header-left clear-fix">
+        <div class="container">
             <h1 class="logo">倾城的个人网站</h1>
+            <button class="menu-toggle">☰</button>
             <nav class="nav">
-                <a class="nav-item nav-active" href="#">首页</a>
+                <a class="nav-item nav-active" href="./首页.html">首页</a>
                 <a class="nav-item" href="./列表.html">精选作品</a>
                 <a class="nav-item" href="./作品集.html">作品集</a>
                 <a class="nav-item" href="./约拍.html">约拍须知</a>
                 <a class="nav-item" href="./个人中心.html">个人中心</a>
             </nav>
-        </div>
-        <div class="header-right">
-            <div class="header-right-unlogined">
+            <div class="header-right">
                 <a href="./登录.html" class="btn-login">登录</a>
                 <a href="./注册.html" class="btn-reg">注册</a>
             </div>
         </div>
-        </header>
-        
-    <!-- 全屏封面轮播区 -->
+    </header>
+    
+    <!-- 轮播图 -->
     <div class="fullscreen-slider">
-      <!-- 轮播图容器 -->
-      <div class="slider-wrapper">
-        <!-- 轮播图1 -->
-        <div class="slider-item active">
-          <img src="./src/微信图片_20251205132512_90_337.jpg" alt="重庆洪崖洞">
-          <div class="slider-text">
-            <p class="sub-text">2022 夏・重庆奉节 | 奉节街衢：车喧烟火浓</p>
-          </div>
+        <div class="slider-wrapper">
+            <div class="slider-item active">
+                <img src="./src/微信图片_20251205132512_90_337.jpg" alt="重庆洪崖洞">
+                <div class="slider-text">
+                    <p>2022 夏・重庆奉节 | 奉节街衢：车喧烟火浓</p>
+                </div>
+            </div>
+            <div class="slider-item">
+                <img src="./src/IMG_4306.jpg" alt="大理花海">
+                <div class="slider-text">
+                    <p>2025 秋・重庆夜景 | 风里都是温柔的形状</p>
+                </div>
+            </div>
+            <div class="slider-item">
+                <img src="./src/ima/5.jpg" alt="上海街拍">
+                <div class="slider-text">
+                    <p>2024 夏・广州东莞 | 橙花缀冬</p>
+                </div>
+            </div>
+            <div class="slider-item">
+                <img src="./src/ima/6.jpg" alt="重庆洪崖洞">
+                <div class="slider-text">
+                    <p>2025 夏・重庆洪崖洞 | 人间烟火最抚人心</p>
+                </div>
+            </div>
+            <div class="slider-item">
+                <img src="./src/IMG20240426093510.jpg" alt="重庆奉节">
+                <div class="slider-text">
+                    <p>2022 夏・重庆奉节 | 人间烟火</p>
+                </div>
+            </div>
         </div>
-        <!-- 轮播图2 -->
-        <div class="slider-item">
-          <img src="./src/IMG_4306.jpg" alt="大理花海">
-          <div class="slider-text">
-            <p class="sub-text">2025 秋・重庆夜景 | 风里都是温柔的形状</p>
-          </div>
+        <div class="slider-title">
+            <h1>倾诚的镜头日记</h1>
+            <p>用快门，藏住生活里的光</p>
         </div>
-        <!-- 轮播图3 -->
-        <div class="slider-item">
-          <img src="./src/ima/5.jpg" alt="上海街拍">
-          <div class="slider-text">
-            <p class="sub-text">2024 夏・广州东莞 | 橙花缀冬</p>
-          </div>
-        </div>
-        <!-- 轮播图4 -->
-        <div class="slider-item">
-          <img src="./src/ima/6.jpg" alt="上海街拍">
-          <div class="slider-text">
-            <p class="sub-text">2025 夏・重庆洪崖洞 | 人间烟火最抚人心</p>
-          </div>
-        </div>
-        <!-- 轮播图5 -->
-        <div class="slider-item">
-          <img src="./src/IMG20240426093510.jpg" alt="上海街拍">
-          <div class="slider-text">
-            <p class="sub-text">2022 夏・重庆奉节 | 人间烟火</p>
-          </div>
-        </div>
-      </div>
-    
-      <!-- 底部叠加标题 -->
-      <div class="slider-title">
-        <h1>倾诚的镜头日记</h1>
-        <p>用快门，藏住生活里的光</p>
-      </div>
-    
-      <!-- 手动切换按钮 -->
-      <button class="slider-control prev-control">←</button>
-      <button class="slider-control next-control">→</button>
+        <button class="slider-control prev-control">←</button>
+        <button class="slider-control next-control">→</button>
+        <div class="slider-dots"></div>
     </div>
     
-    <script>
-    // 轮播逻辑（自动+手动切换）
-    const sliderItems = document.querySelectorAll('.slider-item');
-    const prevBtn = document.querySelector('.prev-control');
-    const nextBtn = document.querySelector('.next-control');
-    let currentIndex = 0;
-    const autoPlayInterval = 5000; // 自动切换间隔（5秒）
-    
-    // 切换轮播图的函数
-    function switchSlider(index) {
-      // 隐藏当前图
-      sliderItems[currentIndex].classList.remove('active');
-      // 显示目标图
-      sliderItems[index].classList.add('active');
-      currentIndex = index;
-    }
-    
-    // 上一张按钮
-    prevBtn.addEventListener('click', () => {
-      const newIndex = (currentIndex - 1 + sliderItems.length) % sliderItems.length;
-      switchSlider(newIndex);
-    });
-    
-    // 下一张按钮
-    nextBtn.addEventListener('click', () => {
-      const newIndex = (currentIndex + 1) % sliderItems.length;
-      switchSlider(newIndex);
-    });
-    
-    // 自动轮播
-    setInterval(() => {
-      const newIndex = (currentIndex + 1) % sliderItems.length;
-      switchSlider(newIndex);
-    }, autoPlayInterval);
-    </script>
-    <!-- 原有首页内容（约拍+案例区域） -->
-    <section>
-       
-       <!-- 个人名片栏 -->
-       <section class="card-section">
-         <div class="card-container">
-           <!-- 左侧头像 -->
-           <div class="card-avatar">
-             <img src="./src/ima/微信图片_20250925132121_39_337.jpg" alt="倾诚头像">
-           </div>
-           <!-- 中间信息 -->
-           <div class="card-info">
-             <h2>倾诚</h2>
-             <p class="card-tag">自由摄影师 | 偏爱光影与人间烟火</p>
-             <p class="card-style">擅长风格：城市风光 / 人像约拍 / 胶片纪实</p>
-           </div>
-           <!-- 右侧统计 -->
-           <div class="card-stats">
-             <div class="stat-item">
-               <span class="stat-icon">📷</span>
-               <span class="stat-text">拍摄经验：3 年</span>
-             </div>
-             <div class="stat-item">
-               <span class="stat-icon">🎞️</span>
-               <span class="stat-text">已拍作品：100+ 组</span>
-             </div>
-           </div>
-         </div>
-       </section>
+    <!-- 主体内容 -->
+    <main>
+        <div class="container">
+            <!-- 个人名片 -->
+            <div class="card-container">
+                <div class="card-avatar">
+                    <img src="./src/ima/微信图片_20250925132121_39_337.jpg" alt="倾诚头像">
+                </div>
+                <div class="card-info">
+                    <h2>倾诚</h2>
+                    <p class="card-tag">自由摄影师 | 偏爱光影与人间烟火</p>
+                    <p class="card-style">擅长风格：城市风光 / 人像约拍 / 胶片纪实</p>
+                </div>
+                <div class="card-stats">
+                    <div class="stat-item">
+                        <span>📷</span>
+                        <span>拍摄经验：3 年</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>🎞️</span>
+                        <span>已拍作品：100+ 组</span>
+                    </div>
+                </div>
+            </div>
 
-       <!-- 3. 案例表格 -->
-       <section class="case-table">
-           <table>
-               <thead>
-                   <tr>
-                       <th>案例一</th>
-                       <th>案例二</th>
-                       <th>案例三</th>
-                   </tr>
-               </thead>
-               <tbody>
-                   <tr>
-                       <td><img src="src/IMG20240426093510.jpg" width="300" height="200" alt="案例一"></td>
-                       <td><img src="src/ima/4.jpg" width="300" height="200" alt="案例二"></td>
-                       <td><img src="src/ima/5.jpg" width="300" height="200" alt="案例三"></td>
-                   </tr>
-                   <tr>
-                       <td align="center" colspan="3"></td>
-                   </tr>
-                   <tr>
-                       <td><img src="src/ima/6.jpg" width="300" height="200" alt="案例四"></td>
-                       <td><img src="src/ima/7.jpg" width="300" height="200" alt="案例五"></td>
-                       <td><img src="src/ima/8.jpg" width="300" height="200" alt="案例六"></td>
-                   </tr>
-               </tbody>
-           </table>
-       </section>
-       <!-- 摄影故事小模块 -->
-  <div style="max-width:800px; margin:40px auto; padding:25px; background:#f8f9fa; border-left:4px solid #4a90e2; border-radius:4px; line-height:1.8;">
-    <h3 style="margin-top:0; color:#333; font-weight:500;">「为什么按下快门？」</h3>
-    <p style="color:#555; font-size:16px;">
-      留不住的太多啦 —— 走过的路、碰过的小生命、一起吃的饭、遇见过的人，我想让照片替我记住 “它们来过”。可后来懂了：照片能存画面，存不住时光。季节会换，人只和想念的人常伴。
-      <span style="color:#4a90e2; font-weight:600;">摄影不是记录风景，而是留住某一刻的心跳。</span>
-    </p>
-  </div>
-       
-       
-       <footer style=" padding:20px 0; text-align:center; margin-top:30px; border-top:1px solid #eee;">
-         <div style="max-width:1200px; margin:0 auto;">
-           <p>© 2025 倾城的个人网站 | 自由摄影师作品展示</p>
-           <p style="margin:8px 0;">联系方式：c2196353107 @倾城 | 约拍邮箱：2196353107@qq.com</p>
-           <p style="font-size:12px; color:#999;">本网站作品均为原创，未经授权禁止商用转载</p>
-         </div>
-       </footer>
-       
-    </section>
+            <!-- 作品筛选 -->
+            <div class="filter-container">
+                <button class="filter-btn active" data-filter="all">全部作品</button>
+                <button class="filter-btn" data-filter="city">城市风光</button>
+                <button class="filter-btn" data-filter="portrait">人像约拍</button>
+                <button class="filter-btn" data-filter="film">胶片纪实</button>
+                <button class="filter-btn" data-filter="nature">自然风光</button>
+            </div>
+
+            <!-- 作品展示 -->
+            <div class="image-grid">
+                <img src="src/IMG20240426093510.jpg" alt="作品1" class="case-img" data-category="city">
+                <img src="src/ima/4.jpg" alt="作品2" class="case-img" data-category="portrait">
+                <img src="src/ima/5.jpg" alt="作品3" class="case-img" data-category="film">
+                <img src="src/ima/6.jpg" alt="作品4" class="case-img" data-category="city">
+                <img src="src/ima/7.jpg" alt="作品5" class="case-img" data-category="nature">
+                <img src="src/ima/8.jpg" alt="作品6" class="case-img" data-category="portrait">
+            </div>
+        </div>
+
+ 
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <h3>倾城的个人网站</h3>
+            <p class="footer-desc">用镜头捕捉生活中的美好瞬间，记录时光的痕迹</p>
+            <div class="divider"></div>
+            <p class="copyright">© 2025 倾城的个人网站 | 自由摄影师作品展示</p>
+            <p class="copyright">联系方式：2196353107@qq.com | 约拍请私信</p>
+            <p class="copyright">本网站作品均为原创，未经授权禁止商用转载</p>
+        </div>
+    </footer>
+
+    <!-- 图片预览模态框 -->
+    <div class="modal">
+        <div class="modal-content">
+            <button class="modal-close">×</button>
+            <img  alt="预览图片" class="modal-img">
+        </div>
+    </div>
+
+    <!-- 回到顶部按钮 -->
+    <button class="back-to-top">↑</button>
+
     <script>
-    // 页面加载时检查LocalStorage
-    window.onload = function() {
-      const popup = document.getElementById('welcomePopup');
-      const closeBtn = document.getElementById('closeBtn');
-      const hasShown = localStorage.getItem('popupShown'); // 读取标记
-    
-      // 若未显示过 → 展示弹窗
-      if (!hasShown) {
-        popup.style.display = 'block';
-        localStorage.setItem('popupShown', 'true'); // 记录“已显示”
-      }
-    
-      // 点击关闭按钮隐藏弹窗
-      closeBtn.onclick = function() {
-        popup.style.display = 'none';
-      };
-    };
+        // ==================== 全局初始化 ====================
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => document.body.classList.add('loaded'), 500);
+            
+            initMobileMenu();
+            initSlider();
+            initScrollEffects();
+            initBackToTop();
+            initCounters();
+            initImagePreview();
+            initFilter();
+            initHeaderScroll();
+        });
+
+        // 导航栏滚动效果
+        function initHeaderScroll() {
+            const header = document.querySelector('.header');
+            window.addEventListener('scroll', () => {
+                header.classList.toggle('scrolled', window.scrollY > 50);
+            });
+        }
+
+        // 移动端菜单
+        function initMobileMenu() {
+            const toggle = document.querySelector('.menu-toggle');
+            const nav = document.querySelector('.nav');
+            
+            toggle.addEventListener('click', () => {
+                nav.classList.toggle('active');
+                toggle.textContent = nav.classList.contains('active') ? '✕' : '☰';
+            });
+        }
+
+        // 轮播图
+        function initSlider() {
+            const items = document.querySelectorAll('.slider-item');
+            const dotsContainer = document.querySelector('.slider-dots');
+            const prevBtn = document.querySelector('.prev-control');
+            const nextBtn = document.querySelector('.next-control');
+            let currentIndex = 0;
+            let interval;
+
+            // 创建指示点
+            items.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.className = `slider-dot ${i === 0 ? 'active' : ''}`;
+                dot.addEventListener('click', () => goToSlide(i));
+                dotsContainer.appendChild(dot);
+            });
+
+            const dots = document.querySelectorAll('.slider-dot');
+
+            function showSlide(index) {
+                items.forEach((item, i) => {
+                    item.classList.toggle('active', i === index);
+                    dots[i].classList.toggle('active', i === index);
+                });
+                currentIndex = index;
+            }
+
+            function goToSlide(index) {
+                showSlide((index + items.length) % items.length);
+            }
+
+            function nextSlide() {
+                goToSlide(currentIndex + 1);
+            }
+
+            function startAutoSlide() {
+                interval = setInterval(nextSlide, 5000);
+            }
+
+            prevBtn.addEventListener('click', () => {
+                clearInterval(interval);
+                goToSlide(currentIndex - 1);
+                startAutoSlide();
+            });
+
+            nextBtn.addEventListener('click', () => {
+                clearInterval(interval);
+                nextSlide();
+                startAutoSlide();
+            });
+
+            const slider = document.querySelector('.fullscreen-slider');
+            slider.addEventListener('mouseenter', () => clearInterval(interval));
+            slider.addEventListener('mouseleave', startAutoSlide);
+
+            startAutoSlide();
+        }
+
+        // 滚动动画
+        function initScrollEffects() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.scroll-reveal').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+
+            // 统计区域动画
+            const statsSection = document.querySelector('.stats-section');
+            if (statsSection) {
+                statsSection.addEventListener('transitionend', (e) => {
+                    if (e.target.classList.contains('active')) {
+                        initCounters();
+                    }
+                });
+            }
+        }
+
+        // 数字计数器
+        function initCounters() {
+            const counters = document.querySelectorAll('.counter');
+            let started = false;
+
+            const startCounting = () => {
+                if (started) return;
+                started = true;
+
+                counters.forEach(counter => {
+                    const target = +counter.getAttribute('data-target');
+                    const duration = 2000;
+                    const step = target / (duration / 16);
+                    let current = 0;
+
+                    const update = () => {
+                        current += step;
+                        if (current < target) {
+                            counter.textContent = Math.ceil(current);
+                            requestAnimationFrame(update);
+                        } else {
+                            counter.textContent = target;
+                        }
+                    };
+                    update();
+                });
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        startCounting();
+                        observer.disconnect();
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            if (counters.length) {
+                observer.observe(counters[0].parentElement);
+            }
+        }
+
+        // 回到顶部
+        function initBackToTop() {
+            const btn = document.querySelector('.back-to-top');
+            
+            window.addEventListener('scroll', () => {
+                btn.classList.toggle('visible', window.scrollY > 300);
+            });
+
+            btn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        // 图片预览
+        function initImagePreview() {
+            const modal = document.querySelector('.modal');
+            const modalImg = document.querySelector('.modal-img');
+            const closeBtn = document.querySelector('.modal-close');
+
+            document.querySelectorAll('.case-img').forEach(img => {
+                img.addEventListener('click', () => {
+                    modalImg.src = img.src;
+                    modal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            closeBtn.addEventListener('click', () => closeModal());
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+
+            function closeModal() {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // 作品筛选
+        function initFilter() {
+            const btns = document.querySelectorAll('.filter-btn');
+            const images = document.querySelectorAll('.case-img');
+
+            btns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    btns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    const filter = btn.dataset.filter;
+
+                    images.forEach(img => {
+                        const category = img.dataset.category;
+                        const show = filter === 'all' || category === filter;
+                        
+                        img.style.display = show ? 'block' : 'none';
+                        img.style.opacity = show ? '1' : '0';
+                        img.style.transform = show ? 'scale(1)' : 'scale(0.8)';
+                    });
+                });
+            });
+        }
     </script>
-</body>
+   </body>
 </html>
