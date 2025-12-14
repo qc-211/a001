@@ -1,37 +1,428 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title></title>
-       <link rel="stylesheet" href="./css/navigation.css">
-        <style>
-            body {
-                margin: 0;
-                padding: 20px;
-                background: linear-gradient(0deg,#ace0f9 0%,#fff1eb  100%);
-                min-height: 100vh;
-            }
-            </style>
-    </head>
-    <body>
-       <header class="header">
-           <div class="container">
-               <h1 class="logo">倾城的个人网站</h1>
-               <button class="menu-toggle">☰</button>
-               <nav class="nav">
-                   <a class="nav-item" href="./首页.html">首页</a>
-                   <a class="nav-item" href="./列表.html">精选作品</a>
-                   <a class="nav-item" href="./作品集.html">作品集</a>
-                   <a class="nav-item" href="./约拍.html">约拍须知</a>
-                   <a class="nav-item nav-active" href="#">个人中心</a>
-               </nav>
-               <div class="header-right">
-                   <a href="./登录.html" class="btn-login">登录</a>
-                   <a href="./注册.html" class="btn-reg">注册</a>
-               </div>
-           </div>
-       </header>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>个人中心 - 倾城的个人网站</title>
+    <link rel="stylesheet" href="./css/navigation.css">
+    <link rel="stylesheet" href="./css/页脚.css">
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --primary-dark: #357abd;
+            --bg-gradient: linear-gradient(0deg, #ace0f9 0%, #fff1eb 100%);
+            --text-dark: #333;
+            --text-light: #666;
+            --white: #ffffff;
+            --gray-100: #f5f5f5;
+            --gray-200: #eeeeee;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
 
-<script src="./js/common.js"></script>
-    </body>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        main {
+            padding: 20px 0 40px;
+            min-height: calc(100vh - 200px);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* 个人信息卡片 */
+        .profile-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 20%;
+            object-fit: cover;
+            border: 4px solid var(--primary);
+            flex-shrink: 0;
+        }
+
+        .profile-info h1 {
+            color: var(--text-dark);
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .profile-info .subtitle {
+            color: var(--primary);
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .profile-info .location {
+            color: var(--text-light);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* 内容卡片 */
+        .content-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .content-card h2 {
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            font-size: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary);
+            display: inline-block;
+        }
+
+        .content-card p {
+            color: var(--text-dark);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        /* 技能标签 */
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .skill-tag {
+            background: var(--gray-100);
+            color: var(--primary-dark);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .skill-tag:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        /* 统计数据 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            background: var(--gray-100);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .stat-item:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        /* 作品预览 */
+        .works-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .work-item {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .work-item:hover {
+            transform: scale(1.05);
+        }
+
+        .work-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .content-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .content-card h2 {
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            font-size: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary);
+            display: inline-block;
+        }
+        .content-card ul {
+            margin-left: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .content-card li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+        
+        /* 移动端优化 */
+        @media (max-width: 768px) {
+            .profile-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 25px 20px;
+            }
+
+            .avatar {
+                width: 100px;
+                height: 100px;
+            }
+
+            .profile-info h1 {
+                font-size: 24px;
+            }
+
+            .content-card h2 {
+                font-size: 18px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .works-preview {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载动画 -->
+    <div class="loading-container">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- 导航栏 -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">倾城的个人博客</h1>
+            <button class="menu-toggle">☰</button>
+            <nav class="nav">
+                <a class="nav-item" href="./首页.html">首页</a>
+                <a class="nav-item" href="./列表.html">精选作品</a>
+                <a class="nav-item" href="./作品集.html">作品集</a>
+                <a class="nav-item" href="./约拍.html">互免约拍</a>
+                <a class="nav-item nav-active" href="#">个人中心</a>
+            </nav>
+            <div class="header-right">
+                <a href="./登录.html" class="btn-login">登录</a>
+                <a href="./注册.html" class="btn-reg">注册</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <!-- 个人信息卡片 -->
+            <div class="profile-card">
+                <img src="./src/ima/微信图片_20250925132121_39_337.jpg" alt="个人头像" class="avatar">
+                <div class="profile-info">
+                    <h1>倾城</h1>
+                    <p class="subtitle">自由摄影师 | 摄影创作者</p>
+                    <p class="location">📍 重庆 · 主城区</p>
+                </div>
+            </div>
+
+            <!-- 个人简介 -->
+            <div class="content-card">
+                <h2>📖 关于我</h2>
+                <p>我是一名常驻重庆的大学生，专注于人像写真、城市风光。摄影对我来说不仅是记录，更是表达情感和故事的方式。我擅长在自然光环境下捕捉人物最真实动人的瞬间，也喜欢探索城市中的独特视角。</p>
+                
+            </div>
+
+            <!-- 技能专长 -->
+            <div class="content-card">
+                <h2>💡 技能专长</h2>
+                <div class="skills-container">
+                    <span class="skill-tag">人像摄影</span>
+                    <span class="skill-tag">自然光拍摄</span>
+                    <span class="skill-tag">后期精修</span>
+                    <span class="skill-tag">城市风光</span>
+                    <span class="skill-tag">像素蛋糕</span>
+                    <span class="skill-tag">Lightroom</span>
+                    <span class="skill-tag">Photoshop</span>
+                </div>
+            </div>
+
+            <!-- 统计数据 -->
+            <div class="content-card">
+                <h2>📊 拍摄数据</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number">200+</span>
+                        <span class="stat-label">拍摄场次</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">100+</span>
+                        <span class="stat-label">精修作品</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">10+</span>
+                        <span class="stat-label">合作模特</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">3年</span>
+                        <span class="stat-label">从业经验</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 联系方式 -->
+            <div class="content-card">
+                <h2>📞 联系方式</h2>
+                <p><strong>邮箱：</strong>2196353107@qq.com</p>
+                <p><strong>微信：</strong>c2196353107（注明"约拍"）</p>
+                <p><strong>常驻地点：</strong>重庆主城区，可协商周边地区</p>
+                <p><strong>拍摄时间：</strong>周末及节假日为主，工作日需提前预约</p>
+            </div>
+            <!-- 注意事项 -->
+            <div class="content-card">
+                <h2>⚠️ 网站须知</h2>
+                <ul>
+                    <li>本网站均为原创</li>
+                    <li>未经许可，禁止转载和商用</li>
+                </ul>
+            </div>
+          
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <h3>倾城的个人网站</h3>
+            <p class="footer-desc">用镜头捕捉生活中的美好瞬间，记录时光的痕迹</p>
+            <div class="divider"></div>
+            <p class="copyright">© 2025 倾城的个人网站 | 自由摄影师作品展示</p>
+            <p class="copyright">联系方式：2196353107@qq.com | 约拍请私信</p>
+        </div>
+    </footer>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => document.body.classList.add('loaded'), 300);
+            
+            initMobileMenu();
+            initBackToTop();
+        });
+
+        function initMobileMenu() {
+            const toggle = document.querySelector('.menu-toggle');
+            const nav = document.querySelector('.nav');
+            
+            toggle.addEventListener('click', () => {
+                nav.classList.toggle('active');
+                toggle.textContent = nav.classList.contains('active') ? '✕' : '☰';
+            });
+        }
+
+        function initBackToTop() {
+            const btn = document.querySelector('.back-to-top') || createBackToTopBtn();
+            window.addEventListener('scroll', () => {
+                btn.classList.toggle('visible', window.scrollY > 300);
+            });
+            btn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        function createBackToTopBtn() {
+            const btn = document.createElement('button');
+            btn.className = 'back-to-top';
+            btn.innerHTML = '↑';
+            btn.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                background: var(--primary);
+                color: white;
+                border: none;
+                cursor: pointer;
+                opacity: 0;
+                transition: opacity 0.3s;
+                z-index: 1000;
+                font-size: 18px;
+            `;
+            document.body.appendChild(btn);
+            return btn;
+        }
+    </script>
+</body>
 </html>

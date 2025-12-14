@@ -2,9 +2,10 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>约拍须知 - 倾城的个人网站</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>互免约拍 - 倾城的个人网站</title>
     <link rel="stylesheet" href="./css/navigation.css">
+    <link rel="stylesheet" href="./css/页脚.css">
     <style>
         :root {
             --primary: #4a90e2;
@@ -27,128 +28,154 @@
         }
 
         body {
-            font-family: "Microsoft YaHei", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
             background: var(--bg-gradient);
             min-height: 100vh;
+            line-height: 1.6;
         }
 
         main {
-            padding: 40px 0;
+            padding: 20px 0 40px;
             min-height: calc(100vh - 200px);
         }
 
         .container {
             max-width: 1000px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 15px;
         }
 
         .section-header {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 30px;
+            padding: 0 10px;
         }
 
         .section-title {
-            font-size: 36px;
+            font-size: 28px;
             color: var(--text-dark);
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            font-weight: 600;
         }
 
         .section-subtitle {
             color: var(--text-light);
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .content-card {
             background: var(--white);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
-            padding: 40px;
-            margin-bottom: 30px;
+            padding: 25px;
+            margin-bottom: 20px;
         }
 
         .content-card h2 {
             color: var(--primary-dark);
-            margin-bottom: 20px;
-            font-size: 24px;
-            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 20px;
+            padding-bottom: 8px;
             border-bottom: 2px solid var(--primary);
             display: inline-block;
         }
 
         .content-card p {
-            margin-bottom: 15px;
-            line-height: 1.8;
+            margin-bottom: 12px;
             color: var(--text-dark);
+            font-size: 15px;
         }
 
         .content-card ul {
-            margin-left: 20px;
-            margin-bottom: 20px;
+            margin-left: 15px;
+            margin-bottom: 15px;
         }
 
         .content-card li {
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             line-height: 1.6;
-        }
-
-        .price-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-
-        .price-table th,
-        .price-table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--gray-200);
-        }
-
-        .price-table th {
-            background: var(--gray-100);
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        .price-table td:last-child {
-            color: var(--primary);
-            font-weight: bold;
+            font-size: 15px;
         }
 
         .contact-section {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: var(--white);
             text-align: center;
-            padding: 50px 40px;
+            padding: 30px 20px;
+            border-radius: var(--radius);
+            margin-top: 30px;
         }
 
         .contact-section h2 {
-            font-size: 28px;
-            margin-bottom: 20px;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .contact-section p {
+            font-size: 15px;
+            opacity: 0.9;
         }
 
         .contact-info {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-            margin-top: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
         }
 
         .contact-item {
             background: rgba(255,255,255,0.1);
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px;
         }
 
         .contact-item h3 {
-            margin-bottom: 10px;
-            font-size: 18px;
+            margin-bottom: 8px;
+            font-size: 16px;
         }
 
         .contact-item p {
-            font-size: 16px;
+            font-size: 14px;
             opacity: 0.9;
+        }
+
+        /* 移动端优化 */
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 24px;
+            }
+            
+            .content-card {
+                padding: 20px;
+            }
+            
+            .content-card h2 {
+                font-size: 18px;
+            }
+            
+            .content-card p, .content-card li {
+                font-size: 14px;
+            }
+
+            .contact-info {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section-title {
+                font-size: 22px;
+            }
+            
+            .section-subtitle {
+                font-size: 13px;
+            }
+            
+            .content-card {
+                padding: 18px;
+                margin-bottom: 15px;
+            }
         }
     </style>
 </head>
@@ -161,13 +188,13 @@
     <!-- 导航栏 -->
     <header class="header">
         <div class="container">
-            <h1 class="logo">倾城的个人网站</h1>
+            <h1 class="logo">倾城的个人博客</h1>
             <button class="menu-toggle">☰</button>
             <nav class="nav">
                 <a class="nav-item" href="./首页.html">首页</a>
                 <a class="nav-item" href="./列表.html">精选作品</a>
                 <a class="nav-item" href="./作品集.html">作品集</a>
-                <a class="nav-item nav-active" href="#">约拍须知</a>
+                <a class="nav-item nav-active" href="#">互免约拍</a>
                 <a class="nav-item" href="./个人中心.html">个人中心</a>
             </nav>
             <div class="header-right">
@@ -180,122 +207,90 @@
     <main>
         <div class="container">
             <div class="section-header">
-                <h1 class="section-title">约拍须知</h1>
-                <p class="section-subtitle">用镜头记录你的美好瞬间</p>
+                <h1 class="section-title">互免约拍</h1>
+                <p class="section-subtitle">用镜头记录美好，创作双赢作品</p>
             </div>
 
             <!-- 服务介绍 -->
             <div class="content-card">
-                <h2>📸 服务内容</h2>
-                <p>我提供专业的摄影服务，包括但不限于：</p>
+                <h2>📸 互免合作说明</h2>
+                <p>我提供照片（互相免费）人像拍摄服务，旨在与志同道合的朋友共同创作优质作品：</p>
                 <ul>
-                    <li>📷 <strong>人像写真</strong>：个人写真、情侣照、全家福、闺蜜照等</li>
-                    <li>🌆 <strong>城市风光</strong>：城市地标、夜景、建筑摄影</li>
-                    <li>🎓 <strong>毕业跟拍</strong>：毕业季拍摄、校园写真</li>
-                    <li>💼 <strong>商业拍摄</strong>：产品摄影、活动记录、企业形象照</li>
+                    <li>🤝 <strong>拍摄免费</strong>：不收取任何拍摄费用，模特也无需支付报酬</li>
+                    <li>📷 <strong>共同创作</strong>：双方共同策划主题，互相尊重创意想法</li>
+                    <li>💄 <strong>分工明确</strong>：模特负责服装、化妆；摄影师提供拍摄、后期</li>
+                    <li>🎨 <strong>作品共享</strong>：摄影师获得作品展示权，模特获得全部精修成片</li>
                 </ul>
-                <p>所有拍摄均为原创，后期精修，提供高清原图和精修图。</p>
-            </div>
+                
 
             <!-- 拍摄流程 -->
             <div class="content-card">
-                <h2>📝 拍摄流程</h2>
-                <p><strong>第一步：沟通需求</strong><br>
-                通过邮箱或微信联系，说明拍摄类型、风格、时间、地点等需求。</p>
+                <h2>📝 合作流程</h2>
+                <p><strong>第一步：沟通想法</strong><br>
+                通过邮箱或微信联系，发送您的模卡/生活照，说明想拍摄的风格、主题。</p>
                 
                 <p><strong>第二步：确定方案</strong><br>
-                根据您的需求制定拍摄方案，包括拍摄计划、服装建议、场景选择等。</p>
+                双方协商拍摄方案，包括时间、地点、服装、妆容等细节。</p>
                 
-                <p><strong>第三步：支付定金</strong><br>
-                确认方案后支付30%定金，锁定拍摄时间。</p>
                 
-                <p><strong>第四步：愉快拍摄</strong><br>
-                按约定时间地点进行拍摄，全程沟通配合，确保拍摄效果。</p>
                 
-                <p><strong>第五步：选片修图</strong><br>
-                拍摄后3-5天内提供原片供选择，精修周期约7-10天。</p>
+                <p><strong>第三步：愉快拍摄</strong><br>
+                按约定时间地点拍摄，保持轻松氛围，共同创作。</p>
                 
-                <p><strong>第六步：交付成片</strong><br>
-                精修完成后交付高清电子版，支持网盘下载。</p>
+                <p><strong>第四步：选片修图</strong><br>
+                拍摄后5-7天内提供原片选图，精修周期约10-15天。</p>
+                
+                <p><strong>第五步：交付成片</strong><br>
+                提供不少于20张精修高清图，双方按约定使用作品。</p>
             </div>
 
-            <!-- 收费标准 -->
-            <div class="content-card">
-                <h2>💰 收费标准</h2>
-                <table class="price-table">
-                    <thead>
-                        <tr>
-                            <th>服务类型</th>
-                            <th>拍摄时长</th>
-                            <th>精修数量</th>
-                            <th>价格</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>个人写真</td>
-                            <td>2小时</td>
-                            <td>20张</td>
-                            <td>¥800</td>
-                        </tr>
-                        <tr>
-                            <td>情侣/闺蜜</td>
-                            <td>2-3小时</td>
-                            <td>30张</td>
-                            <td>¥1200</td>
-                        </tr>
-                        <tr>
-                            <td>毕业跟拍</td>
-                            <td>半天</td>
-                            <td>50张</td>
-                            <td>¥1500</td>
-                        </tr>
-                        <tr>
-                            <td>商业拍摄</td>
-                            <td>按需求定制</td>
-                            <td>按需求定制</td>
-                            <td>面议</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p style="font-size: 14px; color: var(--text-light); margin-top: 15px;">
-                    * 价格包含拍摄、基础后期、精修服务；外景拍摄交通费另计；加急服务需额外收费。
-                </p>
-            </div>
+            <!-- 互免要求 -->
+            <!-- <div class="content-card">
+                <h2>✨ 对模特的期望</h2>
+                <ul>
+                    <li>有良好的表现力，面对镜头不紧张（新手可培养）</li>
+                    <li>能自主完成妆容和发型（简单日常妆即可）</li>
+                    <li>服装符合拍摄主题，建议提前沟通搭配</li>
+                    <li>守时守约，如有变动至少提前48小时通知</li>
+                    <li>同意摄影师将作品用于个人宣传（平台展示、参赛等）</li>
+                    <li>发布作品时需标注摄影师信息（@倾城摄影）</li>
+                </ul>
+            </div -->>
 
             <!-- 注意事项 -->
             <div class="content-card">
-                <h2>⚠️ 注意事项</h2>
+                <h2>⚠️ 重要须知</h2>
                 <ul>
-                    <li>请至少提前3-5天预约，热门时段（周末、节假日）请提前1-2周</li>
-                    <li>拍摄前请保持充足睡眠，做好皮肤护理，建议自带常用化妆品</li>
-                    <li>如需取消或改期，请至少提前48小时通知，否则定金不予退还</li>
-                    <li>拍摄过程中请配合摄影师指导，如有特殊要求请随时沟通</li>
-                    <li>精修风格以自然为主，可接受合理范围内的调整要求</li>
-                    <li>所有照片版权归属摄影师，会精选部分作品用于宣传展示</li>
+                    <li>至少提前3天预约，需提供近期生活照或模卡</li>
+                    <li>拍摄地点优先选择重庆主城区内公共交通便利处</li>
+                    <li>互免不等于随意拍摄，双方均需认真对待创作</li>
                 </ul>
             </div>
 
             <!-- 联系方式 -->
             <div class="contact-section">
                 <h2>📞 联系我</h2>
-                <p>期待与你合作，记录美好瞬间</p>
+                <p>期待与你创作出好作品！</p>
                 <div class="contact-info">
                     <div class="contact-item">
                         <h3>📧 邮箱</h3>
                         <p>2196353107@qq.com</p>
+                        <p>（发送模卡+拍摄想法）</p>
                     </div>
                     <div class="contact-item">
                         <h3>📱 微信</h3>
-                        <p>（添加时请注明"约拍"）</p>
+                        <p>c2196353107</p>
+                        <p>（添加备注"互免约拍"）</p>
                     </div>
                     <div class="contact-item">
                         <h3>📍 常驻地点</h3>
                         <p>重庆主城区</p>
+                        <p>（可协商周边地区）</p>
                     </div>
                     <div class="contact-item">
                         <h3>🕐 拍摄时间</h3>
-                        <p>周一至周日<br>9:00 - 18:00</p>
+                        <p>周末/节假日</p>
+                        <p>工作日需提前协商</p>
                     </div>
                 </div>
             </div>
@@ -332,13 +327,37 @@
         }
 
         function initBackToTop() {
-            const btn = document.querySelector('.back-to-top');
+            const btn = document.querySelector('.back-to-top') || createBackToTopBtn();
             window.addEventListener('scroll', () => {
                 btn.classList.toggle('visible', window.scrollY > 300);
             });
             btn.addEventListener('click', () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
+        }
+
+        function createBackToTopBtn() {
+            const btn = document.createElement('button');
+            btn.className = 'back-to-top';
+            btn.innerHTML = '↑';
+            btn.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                background: var(--primary);
+                color: white;
+                border: none;
+                cursor: pointer;
+                opacity: 0;
+                transition: opacity 0.3s;
+                z-index: 1000;
+                font-size: 18px;
+            `;
+            document.body.appendChild(btn);
+            return btn;
         }
     </script>
 </body>
