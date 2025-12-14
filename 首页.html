@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>倾城的个人网站</title>
+    <title>倾城的个人博客</title>
     <link rel="stylesheet" href="./css/navigation.css">
     <style>
         /* ==================== CSS变量与全局样式 ==================== */
@@ -318,36 +318,6 @@
             font-size: 14px;
         }
 
-        /* 作品筛选 - 响应式按钮组 */
-        .filter-container {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 40px 0;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            padding: 12px 24px;
-            background: var(--gray-100);
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-size: 14px;
-            color: var(--text-dark);
-            font-weight: 500;
-        }
-
-        .filter-btn.active {
-            background: var(--primary);
-            color: var(--white);
-        }
-
-        .filter-btn:hover:not(.active) {
-            background: var(--gray-200);
-        }
-
         /* 图片网格 - 响应式瀑布流 */
         .image-grid {
             display: grid;
@@ -481,6 +451,39 @@
             justify-content: center;
         }
 
+        /* ==================== 摄影故事模块 - 调整间距后的样式 ==================== */
+        .photo-story {
+            max-width: 800px;
+            margin: 40px auto; /* 【关键修改】增加上下间距，从默认20px改为40px */
+            padding: 25px 30px;
+            background: rgba(248, 249, 250, 0.9);
+            border-left: 4px solid var(--primary);
+            border-radius: var(--radius);
+            line-height: 1.8;
+            box-shadow: var(--shadow); /* 【新增】添加阴影增强层次 */
+        }
+        
+        .photo-story h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 20px;
+        }
+        
+        .photo-story p {
+            color: var(--text-light);
+            font-size: 16px;
+            margin-bottom: 0;
+        }
+        
+        .photo-story span {
+            color: var(--primary);
+            font-weight: 600;
+            display: block;
+            margin-top: 10px;
+        }
+
         /* ==================== 响应式设计 - 移动端优化 ==================== */
         @media (max-width: 768px) {
             .container {
@@ -591,6 +594,28 @@
                 gap: 8px;
             }
 
+            /* ===== 摄影故事模块移动端间距优化 ===== */
+            .photo-story {
+                padding: 20px 20px; /* 左右20px内边距，远离屏幕边缘 */
+                margin: 30px auto; /* 【关键修改】移动端间距从20px增加到30px */
+                border-left-width: 3px;
+                box-shadow: var(--shadow);
+            }
+            
+            .photo-story h3 {
+                font-size: 18px;
+            }
+            
+            .photo-story p {
+                font-size: 15px;
+                line-height: 1.5;
+            }
+            
+            .photo-story span {
+                margin-top: 10px;
+                font-size: 15px;
+            }
+
             /* ===== 个人名片移动端优化 ===== */
             main {
                 padding: 40px 0;
@@ -634,18 +659,6 @@
 
             .stat-item {
                 font-size: 13px;
-            }
-
-            /* ===== 筛选按钮移动端优化 ===== */
-            .filter-container {
-                gap: 10px;
-                margin: 30px 0;
-            }
-
-            .filter-btn {
-                padding: 10px 18px;
-                font-size: 13px;
-                border-radius: 20px;
             }
 
             /* ===== 图片网格移动端优化 ===== */
@@ -729,6 +742,12 @@
                 padding: 8px 14px;
                 font-size: 12px;
             }
+            
+            /* 摄影故事模块在小屏幕上保持合适间距 */
+            .photo-story {
+                padding: 18px 15px;
+                margin: 25px auto; /* 【关键修改】小屏幕间距25px */
+            }
         }
     </style>
 </head>
@@ -741,7 +760,7 @@
     <!-- 导航栏 -->
     <header class="header clear-fix">
         <div class="container">
-            <h1 class="logo">倾城的个人网站</h1>
+            <h1 class="logo">倾城的个人博客</h1>
             <button class="menu-toggle" aria-label="菜单切换">☰</button>
             <nav class="nav">
                 <a class="nav-item nav-active" href="./首页.html">首页</a>
@@ -749,6 +768,7 @@
                 <a class="nav-item" href="./作品集.html">作品集</a>
                 <a class="nav-item" href="./约拍.html">约拍须知</a>
                 <a class="nav-item" href="./个人中心.html">个人中心</a>
+                <a class="nav-item" href="./圣诞树/AE-MerryChristmas.html">圣诞树</a>
             </nav>
             <div class="header-right">
                 <a href="./登录.html" class="btn-login">登录</a>
@@ -773,7 +793,7 @@
                 </div>
             </div>
             <div class="slider-item">
-                <img src="./src/ima/5.jpg" alt="上海街拍">
+                <img src="./src/mmexport1762664846168.jpg" alt="上海街拍">
                 <div class="slider-text">
                     <p>2024 夏・广州东莞 | 橙花缀冬</p>
                 </div>
@@ -824,17 +844,12 @@
                     </div>
                 </div>
             </div>
-
-            <!-- 作品筛选 -->
-            <div class="filter-container">
-                <button class="filter-btn active" data-filter="all">全部作品</button>
-                <button class="filter-btn" data-filter="city">城市风光</button>
-                <button class="filter-btn" data-filter="portrait">人像约拍</button>
-                <button class="filter-btn" data-filter="film">胶片纪实</button>
-                <button class="filter-btn" data-filter="nature">自然风光</button>
-            </div>
-
+            
             <!-- 作品展示 -->
+            <p style="text-align: center;font-size: 20px; 
+                      font-weight: bold;
+                      border-radius: 20px;
+                      margin: 0;">作品展示</p>
             <div class="image-grid">
                 <img src="src/IMG20240426093510.jpg" alt="作品1" class="case-img" data-category="city">
                 <img src="src/ima/4.jpg" alt="作品2" class="case-img" data-category="portrait">
@@ -844,8 +859,17 @@
                 <img src="src/ima/8.jpg" alt="作品6" class="case-img" data-category="portrait">
             </div>
         </div>
-    </main>
-
+    
+    
+    <!-- 摄影故事小模块 -->
+    <div class="photo-story">
+        <h3>「为什么按下快门？」</h3>
+        <p>
+            留不住的太多啦 —— 走过的路、碰过的小生命、一起吃的饭、遇见过的人，我想让照片替我记住 “它们来过”。可后来懂了：照片能存画面，存不住时光。季节会换，人只和想念的人常伴。
+            <span>摄影不是记录风景，而是留住某一刻的心跳。</span>
+        </p>
+    </div>
+</main>
     <!-- 页脚 -->
     <footer class="footer">
         <div class="container">
@@ -1070,29 +1094,6 @@
             }
         }
 
-        // 作品筛选
-        function initFilter() {
-            const btns = document.querySelectorAll('.filter-btn');
-            const images = document.querySelectorAll('.case-img');
-
-            btns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    btns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-
-                    const filter = btn.dataset.filter;
-
-                    images.forEach(img => {
-                        const category = img.dataset.category;
-                        const show = filter === 'all' || category === filter;
-                        
-                        img.style.display = show ? 'block' : 'none';
-                        img.style.opacity = show ? '1' : '0';
-                        img.style.transform = show ? 'scale(1)' : 'scale(0.8)';
-                    });
-                });
-            });
-        }
     </script>
 </body>
 </html>
