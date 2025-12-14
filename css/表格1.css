@@ -1,0 +1,42 @@
+/* 图片展示区容器 */
+.case-images {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 图片网格布局 */
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px; /* 图片间距 */
+}
+
+/* 图片基础样式 */
+.case-images img {
+    width: 100%;
+    height: 250px; /* 固定高度保持一致性 */
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.3s ease-in-out;
+}
+
+/* 图片 hover 效果保留 */
+.case-images img:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    cursor: pointer;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .image-grid {
+        grid-template-columns: 1fr; /* 移动端单列显示 */
+        gap: 15px;
+    }
+    
+    .case-images img {
+        height: 200px; /* 移动端适当减小高度 */
+    }
+}

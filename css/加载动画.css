@@ -1,0 +1,111 @@
+/* 修复页面内容显示不全：设置页面容器基础样式 */
+body {
+  min-height: 100vh;
+  background-color: #f8f9fa; /* 浅背景提升可读性 */
+  padding: 2rem; /* 给页面加内边距，避免避免内容贴边 */
+  margin: 0; /* 清除默认边距 */
+}
+
+/* 加载动画容器 */
+.loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* 确保在最上层 */
+  transition: opacity 0.5s ease-out;
+}
+
+/* 加载动画元素 */
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #2f80ed; /* 用导航栏主色 */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* 加载文字 */
+.loading-text {
+  margin-top: 20px;
+  color: #2f80ed;
+  font-family: "微软雅黑", Arial, sans-serif;
+  font-size: 16px;
+  text-align: center;
+}
+
+/* 旋转动画 */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 页面加载完成后隐藏加载动画 */
+body.loaded .loading-container {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 个人信息卡片样式（让信息区域更规整） */
+.profile-card {
+  max-width: 1200px; /* 限制宽度，避免内容过宽 */
+  margin: 0 auto; /* 水平居中 */
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem; /* 头像和文字区域的间距 */
+  padding: 2rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* 轻微阴影提升层次感 */
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* 页面加载完成后显示个人卡片 */
+body.loaded .profile-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 头像区域 */
+.profile-card .avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%; /* 圆形头像 */
+  object-fit: cover; /* 避免头像变形 */
+}
+
+/* 个人信息文本区域 */
+.profile-info {
+  flex: 1; /* 占满剩余宽度 */
+}
+
+.profile-info h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+}
+
+.profile-info .tagline {
+  color: #666;
+  margin-bottom: 0.8rem;
+}
+
+.profile-info .skills {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+/* 右侧统计信息（拍摄经验/作品数） */
+.profile-stats {
+  display: flex;
+  gap: 2rem;
+  color: #666;
+  font-size: 0.9rem;
+}
