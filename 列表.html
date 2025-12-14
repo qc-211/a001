@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<link rel="stylesheet" href="./css/navigation.css">
-<link rel="stylesheet" href="./css/页脚.css">
+    <link rel="stylesheet" href="./css/navigation.css">
+    <link rel="stylesheet" href="./css/页脚.css">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>精选作品 - 倾城的个人网站</title>
@@ -32,10 +32,15 @@
             font-family: "Microsoft YaHei", sans-serif;
             background: var(--bg-gradient);
             min-height: 100vh;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            will-change: scroll-position;
         }
 
         main {
             padding: 40px 0;
+            will-change: transform;
+            transform: translateZ(0);
         }
 
         .container {
@@ -47,6 +52,7 @@
         .section-header {
             text-align: center;
             margin-bottom: 40px;
+            will-change: transform;
         }
 
         .section-title {
@@ -66,6 +72,7 @@
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 25px;
             margin-bottom: 60px;
+            will-change: transform;
         }
 
         .work-card {
@@ -75,18 +82,26 @@
             box-shadow: var(--shadow);
             transition: var(--transition);
             cursor: pointer;
+            will-change: transform;
+            transform: translateZ(0);
+            contain: layout style paint;
+            display: flex;
+            flex-direction: column;
         }
 
         .work-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-5px) translateZ(0);
             box-shadow: var(--shadow-hover);
         }
 
+        /* 图片完整显示 */
         .work-image {
             width: 100%;
-            height: 250px;
-            object-fit: cover;
+            object-fit: contain;
+            background: var(--gray-100);
+            padding: 10px;
             transition: var(--transition);
+            will-change: transform;
         }
 
         .work-card:hover .work-image {
@@ -95,6 +110,11 @@
 
         .work-info {
             padding: 20px;
+            will-change: transform;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .work-title {
@@ -134,6 +154,10 @@
             cursor: pointer;
             transition: var(--transition);
             font-size: 14px;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            will-change: transform;
+            transform: translateZ(0);
         }
 
         .filter-tag.active {
@@ -159,6 +183,7 @@
             z-index: 10000;
             align-items: center;
             justify-content: center;
+            touch-action: none;
         }
 
         .modal.active {
@@ -186,6 +211,8 @@
             cursor: pointer;
             background: none;
             border: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         .modal-info {
@@ -195,6 +222,48 @@
             right: 0;
             text-align: center;
             color: var(--white);
+        }
+
+        /* 导航栏固定定位优化 */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            will-change: transform;
+            transform: translateZ(0);
+            backdrop-filter: none;
+        }
+
+        /* 按钮点击反馈 */
+        .menu-toggle, .btn-login, .btn-reg {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 移动端适配 - 【关键修改】每行一张照片 */
+        @media (max-width: 768px) {
+            .works-grid {
+                /* 【关键修改】改为单列布局 */
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .work-image {
+                /* 【关键修改】移动端调整图片高度 */
+                min-height: 200px;
+                max-height: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .works-grid {
+                gap: 15px;
+            }
+            
+            .work-image {
+                min-height: 180px;
+                max-height: 250px;
+            }
         }
     </style>
 </head>
@@ -208,7 +277,7 @@
     <header class="header">
         <div class="container">
             <h1 class="logo">倾城的个人博客</h1>
-            <button class="menu-toggle">☰</button>
+            <button class="menu-toggle" aria-label="打开菜单">☰</button>
             <nav class="nav">
                 <a class="nav-item" href="./首页.html">首页</a>
                 <a class="nav-item nav-active" href="#">精选作品</a>
@@ -234,8 +303,7 @@
             <div class="filter-bar">
                 <div class="filter-tag active" data-category="all">全部</div>
                 <div class="filter-tag" data-category="city">城市风光</div>
-                <div class="filter-tag" data-category="portrait">人像约拍</div>
-                <div class="filter-tag" data-category="nature">自然风光</div>
+                <div class="filter-tag" data-category="nature">猫猫</div>
                 <div class="filter-tag" data-category="street">街头纪实</div>
             </div>
 
@@ -273,7 +341,7 @@
         // 作品数据
         const worksData = [
             { src: './src/IMG_20240404_203935.jpg', title: '奉节职教', location: '2022・奉节职教', category: 'city' },
-            { src: './src/IMG_20240403_210820.jpg', title: '校园时光', location: '2022・奉节职教', category: 'portrait' },
+            { src: './src/IMG_20240403_210820.jpg', title: '校园时光', location: '2022・奉节职教', category: 'city' },
             { src: './src/CRall_20230917_100431043.jpg', title: '广达厂区', location: '2023・重庆广达', category: 'city' },
             { src: './src/IMG20251125173404.jpg', title: '建工记忆', location: '2025・重庆建工', category: 'street' },
             { src: './src/IMG20250319181807.jpg', title: '东莞印象', location: '2025・广东东莞', category: 'city' },
@@ -282,12 +350,26 @@
             { src: './src/IMG_20240204_144317.jpg', title: '喵星人', location: '2023・猫', category: 'nature' },
             { src: './src/IMG_20240211_144249.jpg', title: '慵懒午后', location: '2023・猫', category: 'nature' },
             { src: './src/CRall_20230929_125636266.jpg', title: '山城夜色', location: '2022・重庆夜景', category: 'city' },
-            { src: './src/CRall_20230929_130850624.jpg', title: '洪崖洞夜景', location: '2022・重庆夜景', category: 'city' },
-            { src: './src/CRall_20230929_135926367.jpg', title: '解放碑', location: '2022・重庆夜景', category: 'city' }
+            { src: './src/CRall_20230929_130850624.jpg', title: '重庆夜景', location: '2022・重庆夜景', category: 'city' },
+            { src: './src/CRall_20230929_135926367.jpg', title: '夜景', location: '2022・重庆夜景', category: 'city' }
         ];
 
+        // ==================== 【优化】防抖函数 ====================
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => document.body.classList.add('loaded'), 300);
+            // 【优化】减少加载动画等待时间
+            setTimeout(() => document.body.classList.add('loaded'), 200);
             
             initMobileMenu();
             initBackToTop();
@@ -304,16 +386,61 @@
                 nav.classList.toggle('active');
                 toggle.textContent = nav.classList.contains('active') ? '✕' : '☰';
             });
+
+            // 【优化】点击菜单项后自动关闭菜单
+            nav.addEventListener('click', (e) => {
+                if (e.target.classList.contains('nav-item')) {
+                    nav.classList.remove('active');
+                    toggle.textContent = '☰';
+                }
+            });
         }
 
+        // ==================== 【优化】防抖处理滚动事件 ====================
         function initBackToTop() {
-            const btn = document.querySelector('.back-to-top');
-            window.addEventListener('scroll', () => {
+            const btn = document.querySelector('.back-to-top') || createBackToTopBtn();
+            
+            // 使用防抖函数，减少滚动事件触发频率
+            const handleScroll = debounce(() => {
                 btn.classList.toggle('visible', window.scrollY > 300);
-            });
+            }, 100); // 100ms延迟，平衡性能和体验
+            
+            // 【优化】passive: true 提升滚动性能
+            window.addEventListener('scroll', handleScroll, { passive: true });
+            
             btn.addEventListener('click', () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
+        }
+
+        function createBackToTopBtn() {
+            const btn = document.createElement('button');
+            btn.className = 'back-to-top';
+            btn.innerHTML = '↑';
+            btn.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                background: var(--primary);
+                color: white;
+                border: none;
+                cursor: pointer;
+                opacity: 0;
+                transition: opacity 0.3s;
+                z-index: 1000;
+                font-size: 18px;
+                /* 【优化】硬件加速 */
+                will-change: transform;
+                transform: translateZ(0);
+                /* 【优化】移除点击高亮 */
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            `;
+            document.body.appendChild(btn);
+            return btn;
         }
 
         function renderWorks(category) {
@@ -324,11 +451,15 @@
                 ? worksData 
                 : worksData.filter(work => work.category === category);
             
+            // 【优化】使用DocumentFragment减少DOM重绘
+            const fragment = document.createDocumentFragment();
+            
             filteredWorks.forEach(work => {
                 const card = document.createElement('div');
                 card.className = 'work-card';
                 card.innerHTML = `
-                    <img src="${work.src}" alt="${work.title}" class="work-image">
+                    <!-- 【优化】图片懒加载 -->
+                    <img src="${work.src}" alt="${work.title}" class="work-image" loading="lazy">
                     <div class="work-info">
                         <h3 class="work-title">${work.title}</h3>
                         <div class="work-meta">
@@ -338,8 +469,11 @@
                     </div>
                 `;
                 card.addEventListener('click', () => openModal(work));
-                grid.appendChild(card);
+                fragment.appendChild(card);
             });
+            
+            // 【优化】一次性添加到DOM
+            grid.appendChild(fragment);
         }
 
         function getCategoryName(category) {
@@ -386,6 +520,15 @@
                 document.body.style.overflow = 'hidden';
             };
         }
+
+        // ==================== 【优化】防止滚动穿透 ====================
+        document.addEventListener('touchmove', function(e) {
+            // 如果菜单打开，阻止背景滚动
+            const nav = document.querySelector('.nav');
+            if (nav.classList.contains('active')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
     </script>
 </body>
 </html>

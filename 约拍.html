@@ -32,6 +32,10 @@
             background: var(--bg-gradient);
             min-height: 100vh;
             line-height: 1.6;
+            /* 【新增】防止横向滚动 */
+            overflow-x: hidden;
+            /* 【新增】硬件加速 */
+            transform: translateZ(0);
         }
 
         main {
@@ -69,6 +73,11 @@
             box-shadow: var(--shadow);
             padding: 25px;
             margin-bottom: 20px;
+            /* 【新增】硬件加速 */
+            will-change: transform;
+            transform: translateZ(0);
+            /* 【新增】防止重绘闪烁 */
+            backface-visibility: hidden;
         }
 
         .content-card h2 {
@@ -104,6 +113,9 @@
             padding: 30px 20px;
             border-radius: var(--radius);
             margin-top: 30px;
+            /* 【新增】硬件加速 */
+            will-change: transform;
+            transform: translateZ(0);
         }
 
         .contact-section h2 {
@@ -127,6 +139,14 @@
             background: rgba(255,255,255,0.1);
             padding: 15px;
             border-radius: 8px;
+            /* 【新增】硬件加速 */
+            will-change: transform;
+            transform: translateZ(0);
+            transition: var(--transition);
+        }
+
+        .contact-item:hover {
+            background: rgba(255,255,255,0.15);
         }
 
         .contact-item h3 {
@@ -160,21 +180,6 @@
             .contact-info {
                 grid-template-columns: 1fr;
                 gap: 10px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .section-title {
-                font-size: 22px;
-            }
-            
-            .section-subtitle {
-                font-size: 13px;
-            }
-            
-            .content-card {
-                padding: 18px;
-                margin-bottom: 15px;
             }
         }
     </style>
@@ -214,14 +219,15 @@
             <!-- 服务介绍 -->
             <div class="content-card">
                 <h2>📸 互免合作说明</h2>
-                <p>我提供照片（互相免费）人像拍摄服务，旨在与志同道合的朋友共同创作优质作品：</p>
+                <p>我提供**互免（互相免费）**拍摄服务，旨在与志同道合的朋友共同创作优质作品：</p>
                 <ul>
                     <li>🤝 <strong>拍摄免费</strong>：不收取任何拍摄费用，模特也无需支付报酬</li>
                     <li>📷 <strong>共同创作</strong>：双方共同策划主题，互相尊重创意想法</li>
                     <li>💄 <strong>分工明确</strong>：模特负责服装、化妆；摄影师提供拍摄、后期</li>
                     <li>🎨 <strong>作品共享</strong>：摄影师获得作品展示权，模特获得全部精修成片</li>
                 </ul>
-                
+                <p><strong>适合人群：</strong>有表现力的模特、想积累作品的演员/主播、需要宣传照的个人/品牌等</p>
+            </div>
 
             <!-- 拍摄流程 -->
             <div class="content-card">
@@ -232,20 +238,21 @@
                 <p><strong>第二步：确定方案</strong><br>
                 双方协商拍摄方案，包括时间、地点、服装、妆容等细节。</p>
                 
+                <p><strong>第三步：签订合同</strong><br>
+                签署简单的互免协议，明确双方权益（作品使用权、发布规范等）。</p>
                 
-                
-                <p><strong>第三步：愉快拍摄</strong><br>
+                <p><strong>第四步：愉快拍摄</strong><br>
                 按约定时间地点拍摄，保持轻松氛围，共同创作。</p>
                 
-                <p><strong>第四步：选片修图</strong><br>
+                <p><strong>第五步：选片修图</strong><br>
                 拍摄后5-7天内提供原片选图，精修周期约10-15天。</p>
                 
-                <p><strong>第五步：交付成片</strong><br>
+                <p><strong>第六步：交付成片</strong><br>
                 提供不少于20张精修高清图，双方按约定使用作品。</p>
             </div>
 
             <!-- 互免要求 -->
-            <!-- <div class="content-card">
+            <div class="content-card">
                 <h2>✨ 对模特的期望</h2>
                 <ul>
                     <li>有良好的表现力，面对镜头不紧张（新手可培养）</li>
@@ -255,15 +262,18 @@
                     <li>同意摄影师将作品用于个人宣传（平台展示、参赛等）</li>
                     <li>发布作品时需标注摄影师信息（@倾城摄影）</li>
                 </ul>
-            </div -->>
+            </div>
 
             <!-- 注意事项 -->
             <div class="content-card">
                 <h2>⚠️ 重要须知</h2>
                 <ul>
-                    <li>至少提前3天预约，需提供近期生活照或模卡</li>
+                    <li>至少提前1周预约，需提供近期生活照或模卡</li>
                     <li>拍摄地点优先选择重庆主城区内公共交通便利处</li>
                     <li>互免不等于随意拍摄，双方均需认真对待创作</li>
+                    <li>精修风格以自然高级为主，接受合理范围内的微调</li>
+                    <li>原片不对外提供，仅用于选片参考</li>
+                    <li>恶劣天气或特殊情况可协商改期，已签合同有效</li>
                 </ul>
             </div>
 
@@ -279,7 +289,7 @@
                     </div>
                     <div class="contact-item">
                         <h3>📱 微信</h3>
-                        <p>c2196353107</p>
+                        <p>qingcheng_photo</p>
                         <p>（添加备注"互免约拍"）</p>
                     </div>
                     <div class="contact-item">
@@ -309,6 +319,19 @@
     </footer>
 
     <script>
+        // ==================== 【新增】防抖函数 ====================
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => document.body.classList.add('loaded'), 300);
             
@@ -326,11 +349,17 @@
             });
         }
 
+        // ==================== 【优化】防抖处理滚动事件 ====================
         function initBackToTop() {
             const btn = document.querySelector('.back-to-top') || createBackToTopBtn();
-            window.addEventListener('scroll', () => {
+            
+            // 使用防抖函数，减少滚动事件触发频率
+            const handleScroll = debounce(() => {
                 btn.classList.toggle('visible', window.scrollY > 300);
-            });
+            }, 50);
+            
+            window.addEventListener('scroll', handleScroll, { passive: true });
+            
             btn.addEventListener('click', () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
@@ -355,6 +384,9 @@
                 transition: opacity 0.3s;
                 z-index: 1000;
                 font-size: 18px;
+                /* 【新增】硬件加速 */
+                will-change: opacity;
+                transform: translateZ(0);
             `;
             document.body.appendChild(btn);
             return btn;
