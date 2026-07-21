@@ -128,14 +128,25 @@
             background: var(--primary-dark);
         }
 
-        /* ==================== 轮播图 - 响应式优化 ==================== */
+        /* ==================== 轮播图 - 9:16 竖屏版 ==================== */
         .fullscreen-slider {
             position: relative;
             width: 100%;
-            height: 80vh;
-            min-height: 500px;
+            aspect-ratio: 9 / 16;       /* 竖屏比例 9:16 */
+            max-height: 100vh;          /* 防止超高,超过视口时裁切 */
             overflow: hidden;
-            background: #000;
+            /* 深色径向渐变:模拟画廊/暗房氛围 */
+            background: radial-gradient(
+                ellipse at center,
+                #2a2e42 0%,
+                #1a1d2e 55%,
+                #0f1120 100%
+            );
+            /* 圆角和内阴影:像照片挂在墙上 */
+            border-radius: 8px;
+            box-shadow:
+                inset 0 0 80px rgba(0, 0, 0, 0.4),
+                0 8px 32px rgba(0, 0, 0, 0.15);
         }
 
         .slider-wrapper {
@@ -144,14 +155,29 @@
             height: 100%;
         }
 
+        /* 渐变蒙层:深色背景下的轻微托底,不再需要那么重 */
+        .slider-overlay {
+            position: absolute;
+            inset: 0;
+            border-radius: 8px;
+            background: linear-gradient(
+                to bottom,
+                rgba(0,0,0,0.25) 0%,
+                rgba(0,0,0,0.05) 30%,
+                rgba(0,0,0,0) 55%,
+                rgba(0,0,0,0.35) 85%,
+                rgba(0,0,0,0.55) 100%
+            );
+            z-index: 2;
+            pointer-events: none;
+        }
+
         .slider-item {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             opacity: 0;
-            transition: opacity 1s ease;
+            transition: opacity 1.2s ease;
+            overflow: hidden;
         }
 
         .slider-item.active {
@@ -161,96 +187,239 @@
         .slider-item img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;     /* 完全显示图片,不裁剪 */
+            /* 静态显示,不做任何 Ken Burns 动画 */
         }
 
+        /* 图注(每张图独立) */
         .slider-text {
             position: absolute;
-            bottom: 100px;
+            left: 0;
+            right: 0;
+            bottom: 110px;
+            text-align: center;
+            color: var(--white);
+            z-index: 5;
+            padding: 0 24px;
+        }
+
+        /* 父容器只控制透明度,内部元素各自控制位移,实现分级入场 */
+        .slider-text {
+            opacity: 0;
+            transition: opacity 0.6s ease 0.3s;
+        }
+        .slider-item.active .slider-text { opacity: 1; }
+
+        /* 徽章:先入场,从下方 24px 滑入 + 微微缩放 */
+        .slider-text .badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 20px;
+            font-size: 12px;
+            letter-spacing: 4px;
+            margin-bottom: 16px;
+            opacity: 0;
+            transform: translateY(24px) scale(0.9);
+            transition:
+                opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 0.4s,
+                transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 0.4s,
+                letter-spacing 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 0.4s;
+        }
+        .slider-item.active .slider-text .badge {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            letter-spacing: 2px;        /* 收紧字距,有"就位"感 */
+        }
+
+        /* 字:在徽章之后入场 */
+        .slider-text .caption {
+            font-size: clamp(18px, 2.5vw, 26px);
+            font-weight: 300;
+            letter-spacing: 8px;        /* 入场前字距撑开 */
+            text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+            line-height: 1.5;
+            opacity: 0;
+            transform: translateY(28px);
+            transition:
+                opacity 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) 0.65s,
+                transform 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) 0.65s,
+                letter-spacing 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) 0.65s;
+        }
+        .slider-item.active .slider-text .caption {
+            opacity: 1;
+            transform: translateY(0);
+            letter-spacing: 2px;        /* 字距收紧 */
+        }
+
+        /* 顶部品牌标题(始终显示) */
+        .slider-title {
+            position: absolute;
+            top: 30px;
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
             color: var(--white);
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
             z-index: 5;
-            width: 90%;
             padding: 0 20px;
+            opacity: 0.92;
         }
 
         .slider-title {
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: var(--white);
-            z-index: 5;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
-            width: 90%;
-            padding: 0 20px;
+            animation: titleFloat 5s ease-in-out infinite;
+        }
+
+        @keyframes titleFloat {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50%      { transform: translateX(-50%) translateY(-4px); }
         }
 
         .slider-title h1 {
-            font-size: clamp(32px, 5vw, 48px);
-            margin-bottom: 15px;
-            font-weight: bold;
-            line-height: 1.2;
+            font-size: clamp(20px, 2.4vw, 26px);
+            margin-bottom: 4px;
+            font-weight: 600;
+            letter-spacing: 6px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .slider-title .divider {
+            width: 40px;
+            height: 2px;
+            background: var(--primary);
+            margin: 8px auto;
+            transform-origin: center;
+            animation: dividerPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes dividerPulse {
+            0%, 100% { transform: scaleX(1); opacity: 1; }
+            50%      { transform: scaleX(1.6); opacity: 0.7; }
         }
 
         .slider-title p {
-            font-size: clamp(16px, 2.5vw, 20px);
-            line-height: 1.4;
+            font-size: clamp(11px, 1.4vw, 13px);
+            letter-spacing: 4px;
+            opacity: 0.85;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
         }
 
+        /* 右上角计数器 */
+        .slider-counter {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            color: var(--white);
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            letter-spacing: 3px;
+            z-index: 5;
+            opacity: 0.9;
+        }
+        .slider-counter .current {
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .slider-counter .separator {
+            margin: 0 8px;
+            opacity: 0.5;
+        }
+        .slider-counter .total {
+            opacity: 0.6;
+        }
+
+        /* 箭头控件(SVG 图标) */
         .slider-control {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(255,255,255,0.2);
-            border: none;
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.25);
             color: var(--white);
-            font-size: 24px;
-            width: 50px;
-            height: 50px;
+            width: 54px;
+            height: 54px;
             border-radius: 50%;
             cursor: pointer;
-            transition: var(--transition);
             z-index: 10;
             display: flex;
             align-items: center;
             justify-content: center;
+            opacity: 0;
+            transition: opacity 0.4s ease, background 0.3s ease, transform 0.3s ease;
+        }
+
+        .fullscreen-slider:hover .slider-control {
+            opacity: 1;
         }
 
         .slider-control:hover {
-            background: rgba(255,255,255,0.3);
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-50%) scale(1.08);
         }
 
-        .prev-control { left: 30px; }
-        .next-control { right: 30px; }
+        .slider-control svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
 
+        .prev-control { left: 36px; }
+        .next-control { right: 36px; }
+
+        /* 进度条式指示点(底部) */
         .slider-dots {
             position: absolute;
-            bottom: 30px;
+            bottom: 36px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 10px;
+            gap: 12px;
             z-index: 10;
         }
 
         .slider-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.5);
+            position: relative;
+            width: 36px;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255,255,255,0.25);
             cursor: pointer;
-            transition: var(--transition);
+            overflow: visible;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+        .slider-dot:hover { transform: scaleY(1.5); }
+
+        /* 进度填充层:激活时从左到右长出来 + 蓝色辉光 */
+        .slider-dot::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 2px;
+            background: linear-gradient(to right, var(--white), var(--primary));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+            box-shadow: 0 0 0 rgba(74, 144, 226, 0);
         }
 
-        .slider-dot.active {
-            background: var(--white);
-            width: 30px;
-            border-radius: 5px;
+        .slider-dot.active::after {
+            transform: scaleX(1);
+            animation: dotProgress 5s linear forwards;
+        }
+
+        @keyframes dotProgress {
+            from { transform: scaleX(0); box-shadow: 0 0 0 rgba(74, 144, 226, 0); }
+            50%  { box-shadow: 0 0 10px rgba(74, 144, 226, 0.6); }
+            to   { transform: scaleX(1); box-shadow: 0 0 6px rgba(74, 144, 226, 0.4); }
         }
 
         /* ==================== 内容区域 ==================== */
@@ -318,27 +487,194 @@
             font-size: 14px;
         }
 
-        /* 图片网格 - 响应式瀑布流 */
+        /* ========== 作品展示区 ========== */
+        .portfolio-section {
+            margin: 80px 0;
+        }
+
+        /* 区块标题 */
+        .section-heading {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-heading h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+        }
+
+        /* 标题两边的装饰线 */
+        .section-heading h2::before,
+        .section-heading h2::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 50px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--primary));
+        }
+        .section-heading h2::before { right: 100%; margin-right: 20px; }
+        .section-heading h2::after  { left: 100%;  margin-left: 20px;  background: linear-gradient(to left, transparent, var(--primary)); }
+
+        .section-heading .subtitle {
+            color: var(--text-light);
+            font-size: 15px;
+            letter-spacing: 4px;
+            font-weight: 300;
+        }
+
+        /* 非对称网格:1 大 + 5 小 */
         .image-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 80px;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: 220px;
+            gap: 18px;
+            margin-bottom: 40px;
+        }
+
+        /* 大图(featured):跨 2 列 2 行 */
+        .case-card.featured {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .case-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius);
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            background: var(--gray-200);
+        }
+
+        .case-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-hover);
         }
 
         .case-img {
             width: 100%;
-            aspect-ratio: 4/3;
+            height: 100%;
             object-fit: cover;
-            border-radius: var(--radius);
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: var(--shadow);
+            transition: transform 0.6s ease;
+            display: block;
         }
 
-        .case-img:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-hover);
+        .case-card:hover .case-img {
+            transform: scale(1.08);
+        }
+
+        /* 悬浮信息层 */
+        .case-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top,
+                rgba(0, 0, 0, 0.85) 0%,
+                rgba(0, 0, 0, 0.4) 40%,
+                rgba(0, 0, 0, 0) 70%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            color: var(--white);
+        }
+
+        .case-card:hover .case-overlay {
+            opacity: 1;
+        }
+
+        .case-overlay .category {
+            display: inline-block;
+            align-self: flex-start;
+            padding: 4px 12px;
+            background: var(--primary);
+            color: var(--white);
+            font-size: 12px;
+            border-radius: 20px;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            transform: translateY(10px);
+            transition: transform 0.35s ease;
+        }
+
+        .case-card:hover .case-overlay .category {
+            transform: translateY(0);
+        }
+
+        .case-overlay .title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            transform: translateY(10px);
+            transition: transform 0.4s ease 0.05s;
+        }
+
+        .case-card.featured .case-overlay .title {
+            font-size: 22px;
+        }
+
+        .case-card:hover .case-overlay .title {
+            transform: translateY(0);
+        }
+
+        .case-overlay .meta {
+            font-size: 12px;
+            opacity: 0.85;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transform: translateY(10px);
+            transition: transform 0.4s ease 0.1s;
+        }
+
+        .case-card:hover .case-overlay .meta {
+            transform: translateY(0);
+        }
+
+        /* 查看全部按钮 */
+        .view-all-wrap {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .view-all-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 32px;
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            letter-spacing: 2px;
+            transition: var(--transition);
+        }
+
+        .view-all-btn:hover {
+            background: var(--primary);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(74, 144, 226, 0.35);
+        }
+
+        .view-all-btn .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .view-all-btn:hover .arrow {
+            transform: translateX(4px);
         }
 
         /* 页脚 - 响应式设计 */
@@ -535,64 +871,43 @@
                 display: none;
             }
 
-            /* ===== 轮播图移动端优化 ===== */
-            .fullscreen-slider {
-                height: auto;
-                min-height: auto;
-                aspect-ratio: 16/9;
-            }
-
-            .slider-wrapper {
-                aspect-ratio: 16/9;
-            }
-
-            .slider-item {
-                aspect-ratio: 16/9;
-            }
-
-            .slider-item img {
-                object-fit: contain;
-                background: linear-gradient(to bottom, #1a1a1a, #000);
-            }
+            /* ===== 轮播图移动端 ===== */
+            /* 移动端也保持 9:16,不覆盖 */
 
             .slider-title {
-                top: 35%;
-                width: 90%;
-                padding: 0 15px;
+                top: 20px;
             }
+            .slider-title h1 { letter-spacing: 3px; }
+            .slider-title p  { letter-spacing: 2px; }
+            .slider-title .divider { width: 28px; height: 2px; }
 
-            .slider-title h1 {
-                font-size: clamp(20px, 6vw, 28px);
-                margin-bottom: 10px;
+            .slider-counter {
+                top: 22px;
+                right: 20px;
+                font-size: 12px;
             }
-
-            .slider-title p {
-                font-size: clamp(12px, 3.5vw, 14px);
-            }
+            .slider-counter .current { font-size: 20px; }
 
             .slider-text {
-                bottom: 25px;
-                padding: 0 15px;
+                bottom: 56px;
+                padding: 0 16px;
             }
-
-            .slider-text p {
-                font-size: clamp(10px, 3vw, 12px);
-                line-height: 1.3;
-            }
+            .slider-text .badge  { font-size: 10px; padding: 4px 12px; margin-bottom: 10px; }
+            .slider-text .caption { letter-spacing: 1px; }
 
             .slider-control {
-                width: 36px;
-                height: 36px;
-                font-size: 16px;
+                width: 40px;
+                height: 40px;
             }
-
-            .prev-control { left: 10px; }
-            .next-control { right: 10px; }
+            .slider-control svg { width: 18px; height: 18px; }
+            .prev-control { left: 14px; }
+            .next-control { right: 14px; }
 
             .slider-dots {
-                bottom: 15px;
+                bottom: 22px;
                 gap: 8px;
             }
+            .slider-dot { width: 24px; }
 
             /* ===== 摄影故事模块移动端间距优化 ===== */
             .photo-story {
@@ -661,16 +976,29 @@
                 font-size: 13px;
             }
 
-            /* ===== 图片网格移动端优化 ===== */
-            .image-grid {
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-                gap: 15px;
-                margin-bottom: 50px;
-            }
+            /* ===== 作品展示区移动端 ===== */
+            .portfolio-section { margin: 50px 0; }
+            .section-heading { margin-bottom: 30px; }
+            .section-heading h2 { font-size: 24px; letter-spacing: 1px; }
+            .section-heading h2::before,
+            .section-heading h2::after { width: 30px; }
+            .section-heading h2::before { margin-right: 12px; }
+            .section-heading h2::after  { margin-left: 12px; }
+            .section-heading .subtitle { font-size: 12px; letter-spacing: 2px; }
 
-            .case-img {
-                aspect-ratio: 3/4;
+            .image-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-auto-rows: 160px;
+                gap: 12px;
             }
+            .case-card.featured {
+                grid-column: span 2;
+                grid-row: span 2;
+            }
+            .case-overlay { padding: 14px; }
+            .case-overlay .title { font-size: 14px !important; }
+            .case-overlay .meta  { font-size: 11px; }
+            .view-all-btn { padding: 10px 24px; font-size: 13px; }
 
             /* ===== 页脚移动端优化 ===== */
             .footer {
@@ -711,11 +1039,12 @@
         @media (max-width: 480px) {
             .image-grid {
                 grid-template-columns: 1fr 1fr;
-                gap: 12px;
+                grid-auto-rows: 140px;
+                gap: 10px;
             }
-
-            .case-img {
-                aspect-ratio: 3/4;
+            .case-card.featured {
+                grid-column: span 2;
+                grid-row: span 2;
             }
 
             .slider-title h1 {
@@ -783,40 +1112,59 @@
             <div class="slider-item active">
                 <img src="./src/IMG_20240404_203935.jpg" alt="重庆洪崖洞">
                 <div class="slider-text">
-                    <p>2022 夏・重庆奉节 | 奉节街衢：车喧烟火浓</p>
+                    <span class="badge">2022 · 夏 · 重庆奉节</span>
+                    <p class="caption">奉节街衢 · 车喧烟火浓</p>
                 </div>
             </div>
             <div class="slider-item">
                 <img src="./src/IMG_4306.jpg" alt="大理花海">
                 <div class="slider-text">
-                    <p>2025 秋・重庆夜景 | 风里都是温柔的形状</p>
+                    <span class="badge">2025 · 秋 · 重庆夜景</span>
+                    <p class="caption">风里都是温柔的形状</p>
                 </div>
             </div>
             <div class="slider-item">
                 <img src="./src/mmexport1762664846168.jpg" alt="上海街拍">
                 <div class="slider-text">
-                    <p>2024 夏・广州东莞 | 橙花缀冬</p>
+                    <span class="badge">2024 · 夏 · 广州东莞</span>
+                    <p class="caption">橙花缀冬</p>
                 </div>
             </div>
             <div class="slider-item">
                 <img src="./src/ima/6.jpg" alt="重庆洪崖洞">
                 <div class="slider-text">
-                    <p>2025 夏・重庆洪崖洞 | 人间烟火最抚人心</p>
+                    <span class="badge">2025 · 夏 · 重庆洪崖洞</span>
+                    <p class="caption">人间烟火最抚人心</p>
                 </div>
             </div>
             <div class="slider-item">
                 <img src="./src/IMG20240426093510.jpg" alt="重庆奉节">
                 <div class="slider-text">
-                    <p>2022 夏・重庆奉节 | 人间烟火</p>
+                    <span class="badge">2022 · 夏 · 重庆奉节</span>
+                    <p class="caption">人间烟火</p>
                 </div>
             </div>
+            <div class="slider-overlay"></div>
         </div>
+
         <div class="slider-title">
             <h1>倾诚的镜头日记</h1>
+            <div class="divider"></div>
             <p>用快门，藏住生活里的光</p>
         </div>
-        <button class="slider-control prev-control" aria-label="上一张">←</button>
-        <button class="slider-control next-control" aria-label="下一张">→</button>
+
+        <div class="slider-counter">
+            <span class="current">01</span>
+            <span class="separator">/</span>
+            <span class="total">05</span>
+        </div>
+
+        <button class="slider-control prev-control" aria-label="上一张">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <button class="slider-control next-control" aria-label="下一张">
+            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
         <div class="slider-dots"></div>
     </div>
     
@@ -846,18 +1194,74 @@
             </div>
             
             <!-- 作品展示 -->
-            <p style="text-align: center;font-size: 20px; 
-                      font-weight: bold;
-                      border-radius: 20px;
-                      margin: 0;">作品展示</p>
-            <div class="image-grid">
-                <img src="src/IMG20240426093510.jpg" alt="作品1" class="case-img" data-category="city">
-                <img src="src/ima/4.jpg" alt="作品2" class="case-img" data-category="portrait">
-                <img src="src/ima/5.jpg" alt="作品3" class="case-img" data-category="film">
-                <img src="src/ima/6.jpg" alt="作品4" class="case-img" data-category="city">
-                <img src="src/ima/7.jpg" alt="作品5" class="case-img" data-category="nature">
-                <img src="src/ima/8.jpg" alt="作品6" class="case-img" data-category="portrait">
-            </div>
+            <section class="portfolio-section">
+                <div class="section-heading">
+                    <h2>作品展示</h2>
+                    <p class="subtitle">PORTFOLIO · 镜头下的故事</p>
+                </div>
+
+                <div class="image-grid">
+                    <div class="case-card featured" data-category="street">
+                        <img src="src/IMG20240426093510.jpg" alt="城市街头" class="case-img">
+                        <div class="case-overlay">
+                            <span class="category">街拍</span>
+                            <h3 class="title">城市街头</h3>
+                            <p class="meta">📷 Sony A7M4 · 35mm</p>
+                        </div>
+                    </div>
+
+                    <div class="case-card" data-category="portrait">
+                        <img src="src/ima/4.jpg" alt="城市印象" class="case-img">
+                        <div class="case-overlay">
+                            <span class="category">人像</span>
+                            <h3 class="title">城市印象</h3>
+                            <p class="meta">📷 50mm f/1.8</p>
+                        </div>
+                    </div>
+
+                    <div class="case-card" data-category="film">
+                        <img src="src/ima/5.jpg" alt="街头风光" class="case-img">
+                        <div class="case-overlay">
+                            <span class="category">胶片</span>
+                            <h3 class="title">街头风光</h3>
+                            <p class="meta">🎞️ Kodak Portra 400</p>
+                        </div>
+                    </div>
+
+                    <div class="case-card" data-category="city">
+                        <img src="src/ima/6.jpg" alt="3D城市" class="case-img">
+                        <div class="case-overlay">
+                            <span class="category">城市</span>
+                            <h3 class="title">3D 城市</h3>
+                            <p class="meta">📷 24mm</p>
+                        </div>
+                    </div>
+
+                    <div class="case-card" data-category="nature">
+                        <img src="src/ima/7.jpg" alt="自然记录" class="case-img">
+                        <div class="case-overlay">
+                            <span class="category">自然</span>
+                            <h3 class="title">自然记录</h3>
+                            <p class="meta">📷 70-200mm</p>
+                        </div>
+                    </div>
+
+                    <div class="case-card" data-category="portrait">
+                        <img src="src/ima/8.jpg" alt="人像写真" class="case-img">
+                        <div class="case-overlay">
+                            <span class="category">人像</span>
+                            <h3 class="title">人像写真</h3>
+                            <p class="meta">📷 85mm f/1.4</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="view-all-wrap">
+                    <a href="./作品集.html" class="view-all-btn">
+                        查看更多作品 <span class="arrow">→</span>
+                    </a>
+                </div>
+            </section>
         </div>
     
     
@@ -934,14 +1338,23 @@
             const dotsContainer = document.querySelector('.slider-dots');
             const prevBtn = document.querySelector('.prev-control');
             const nextBtn = document.querySelector('.next-control');
+            const counterCurrent = document.querySelector('.slider-counter .current');
+            const counterTotal = document.querySelector('.slider-counter .total');
             let currentIndex = 0;
             let interval;
+
+            const total = items.length;
+            if (counterTotal) counterTotal.textContent = String(total).padStart(2, '0');
 
             // 创建指示点
             items.forEach((_, i) => {
                 const dot = document.createElement('div');
                 dot.className = `slider-dot ${i === 0 ? 'active' : ''}`;
-                dot.addEventListener('click', () => goToSlide(i));
+                dot.addEventListener('click', () => {
+                    clearInterval(interval);
+                    goToSlide(i);
+                    startAutoSlide();
+                });
                 dotsContainer.appendChild(dot);
             });
 
@@ -950,13 +1363,19 @@
             function showSlide(index) {
                 items.forEach((item, i) => {
                     item.classList.toggle('active', i === index);
-                    dots[i].classList.toggle('active', i === index);
                 });
+                // 重置所有 dots,再激活当前(让 CSS 动画重新跑)
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === index);
+                });
+                if (counterCurrent) {
+                    counterCurrent.textContent = String(index + 1).padStart(2, '0');
+                }
                 currentIndex = index;
             }
 
             function goToSlide(index) {
-                showSlide((index + items.length) % items.length);
+                showSlide((index + total) % total);
             }
 
             function nextSlide() {
@@ -1075,11 +1494,14 @@
             const modalImg = document.querySelector('.modal-img');
             const closeBtn = document.querySelector('.modal-close');
 
-            document.querySelectorAll('.case-img').forEach(img => {
-                img.addEventListener('click', () => {
-                    modalImg.src = img.src;
-                    modal.classList.add('active');
-                    document.body.style.overflow = 'hidden';
+            document.querySelectorAll('.case-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const img = card.querySelector('.case-img');
+                    if (img) {
+                        modalImg.src = img.src;
+                        modal.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    }
                 });
             });
 

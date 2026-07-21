@@ -62,14 +62,11 @@
             font-size: 16px;
         }
 
-        /* 作品集网格 */
+        /* 作品集网格 —— CSS 多列瀑布流(masonry) */
         .portfolio-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
+            column-count: 4;                 /* 桌面:4 列 */
+            column-gap: 16px;                /* 列间距 */
             margin-bottom: 60px;
-            /* 【新增】硬件加速 */
-            will-change: transform;
         }
 
         .portfolio-item {
@@ -84,6 +81,13 @@
             backface-visibility: hidden;
             /* 【新增】硬件加速 */
             transform: translateZ(0);
+            /* 瀑布流关键:禁止在项内部断行 */
+            break-inside: avoid;
+            -webkit-column-break-inside: avoid;
+            page-break-inside: avoid;
+            /* 项之间留间距 */
+            margin-bottom: 16px;
+            display: block;                  /* 块级元素才能完整占满列宽 */
         }
 
         .portfolio-item:hover {
@@ -110,12 +114,13 @@
         /* 主图片 */
         .portfolio-item img {
             width: 100%;
-            height: 200px;
-            object-fit: contain;
+            height: auto;                /* 按图片自然长宽比显示,完全可见 */
+            object-fit: contain;         /* 兜底:确保完整显示,不被裁剪 */
             padding: 10px;
+            display: block;              /* 消除 inline 元素底部空白 */
             position: relative;
             z-index: 2;
-            /* 【新增】硬件加速 */
+            /* 硬件加速 */
             will-change: transform;
         }
 
@@ -227,16 +232,19 @@
             border: none;
         }
 
-        /* ==================== 【关键修改】移动端2列布局 ==================== */
+        /* ==================== 响应式:瀑布流列数随窗口自适应 ==================== */
+        @media (max-width: 1200px) {
+            .portfolio-grid { column-count: 3; }
+        }
+
         @media (max-width: 768px) {
             .portfolio-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 10px;
+                column-count: 2;
+                column-gap: 10px;
                 margin-bottom: 40px;
             }
 
             .portfolio-item img {
-                height: 150px;
                 padding: 8px;
             }
 
@@ -255,11 +263,11 @@
 
         @media (max-width: 480px) {
             .portfolio-grid {
-                gap: 8px;
+                column-count: 1;
+                column-gap: 0;
             }
-            
+
             .portfolio-item img {
-                height: 130px;
                 padding: 5px;
             }
         }
