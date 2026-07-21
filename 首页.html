@@ -128,12 +128,13 @@
             background: var(--primary-dark);
         }
 
-        /* ==================== 轮播图 - 9:16 竖屏版 ==================== */
+        /* ==================== 轮播图 - 16:9 横屏版 ==================== */
         .fullscreen-slider {
             position: relative;
-            width: 100%;
-            aspect-ratio: 9 / 16;       /* 竖屏比例 9:16 */
-            max-height: 100vh;          /* 防止超高,超过视口时裁切 */
+            /* 宽度同时受窗口和视口高度约束,保证 16:9 永远成立 */
+            width: min(100%, calc(100vh * 16 / 9));
+            aspect-ratio: 16 / 9;
+            margin-inline: auto;        /* 居中 */
             overflow: hidden;
             /* 深色径向渐变:模拟画廊/暗房氛围 */
             background: radial-gradient(
@@ -147,6 +148,8 @@
             box-shadow:
                 inset 0 0 80px rgba(0, 0, 0, 0.4),
                 0 8px 32px rgba(0, 0, 0, 0.15);
+            /* 关键:开启容器查询,让 cqi 单位生效(基于容器宽度) */
+            container-type: inline-size;
         }
 
         .slider-wrapper {
@@ -187,7 +190,8 @@
         .slider-item img {
             width: 100%;
             height: 100%;
-            object-fit: contain;     /* 完全显示图片,不裁剪 */
+            object-fit: cover;       /* 填满整个 9:16 容器,略微裁剪 */
+            object-position: center; /* 居中裁切,保留主体 */
             /* 静态显示,不做任何 Ken Burns 动画 */
         }
 
@@ -213,15 +217,15 @@
         /* 徽章:先入场,从下方 24px 滑入 + 微微缩放 */
         .slider-text .badge {
             display: inline-block;
-            padding: 6px 16px;
+            padding: 0.6cqi 1.6cqi;
             background: rgba(255,255,255,0.15);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.25);
             border-radius: 20px;
-            font-size: 12px;
+            font-size: clamp(10px, 0.9cqi, 14px);
             letter-spacing: 4px;
-            margin-bottom: 16px;
+            margin-bottom: 1.5cqi;
             opacity: 0;
             transform: translateY(24px) scale(0.9);
             transition:
@@ -237,7 +241,7 @@
 
         /* 字:在徽章之后入场 */
         .slider-text .caption {
-            font-size: clamp(18px, 2.5vw, 26px);
+            font-size: clamp(16px, 2cqi, 32px);    /* 基于容器宽度 */
             font-weight: 300;
             letter-spacing: 8px;        /* 入场前字距撑开 */
             text-shadow: 0 2px 12px rgba(0,0,0,0.6);
@@ -278,7 +282,7 @@
         }
 
         .slider-title h1 {
-            font-size: clamp(20px, 2.4vw, 26px);
+            font-size: clamp(18px, 2.2cqi, 34px);   /* 基于容器宽度 */
             margin-bottom: 4px;
             font-weight: 600;
             letter-spacing: 6px;
@@ -300,7 +304,7 @@
         }
 
         .slider-title p {
-            font-size: clamp(11px, 1.4vw, 13px);
+            font-size: clamp(11px, 1cqi, 16px);     /* 基于容器宽度 */
             letter-spacing: 4px;
             opacity: 0.85;
             text-shadow: 0 2px 8px rgba(0,0,0,0.5);
@@ -309,17 +313,17 @@
         /* 右上角计数器 */
         .slider-counter {
             position: absolute;
-            top: 30px;
-            right: 40px;
+            top: 3cqi;
+            right: 4cqi;
             color: var(--white);
             font-family: 'Courier New', monospace;
-            font-size: 14px;
+            font-size: clamp(11px, 1cqi, 16px);
             letter-spacing: 3px;
             z-index: 5;
             opacity: 0.9;
         }
         .slider-counter .current {
-            font-size: 28px;
+            font-size: clamp(22px, 2.4cqi, 40px);
             font-weight: 600;
         }
         .slider-counter .separator {
@@ -340,8 +344,8 @@
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.25);
             color: var(--white);
-            width: 54px;
-            height: 54px;
+            width: 5.5cqi;
+            height: 5.5cqi;
             border-radius: 50%;
             cursor: pointer;
             z-index: 10;
@@ -363,8 +367,8 @@
         }
 
         .slider-control svg {
-            width: 22px;
-            height: 22px;
+            width: 2.2cqi;
+            height: 2.2cqi;
             fill: none;
             stroke: currentColor;
             stroke-width: 2;
@@ -372,24 +376,24 @@
             stroke-linejoin: round;
         }
 
-        .prev-control { left: 36px; }
-        .next-control { right: 36px; }
+        .prev-control { left: 3.6cqi; }
+        .next-control { right: 3.6cqi; }
 
         /* 进度条式指示点(底部) */
         .slider-dots {
             position: absolute;
-            bottom: 36px;
+            bottom: 3.6cqi;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 12px;
+            gap: 1.2cqi;
             z-index: 10;
         }
 
         .slider-dot {
             position: relative;
-            width: 36px;
-            height: 4px;
+            width: 3.6cqi;
+            height: 0.4cqi;
             border-radius: 2px;
             background: rgba(255,255,255,0.25);
             cursor: pointer;
@@ -872,42 +876,32 @@
             }
 
             /* ===== 轮播图移动端 ===== */
-            /* 移动端也保持 9:16,不覆盖 */
+            /* 移动端保持 16:9,只调整圆角和高度上限 */
+            .fullscreen-slider {
+                width: min(100%, calc(75vh * 16 / 9));
+                aspect-ratio: 16 / 9;
+                border-radius: 6px;
+            }
 
             .slider-title {
-                top: 20px;
+                top: 2.5cqi;
             }
             .slider-title h1 { letter-spacing: 3px; }
             .slider-title p  { letter-spacing: 2px; }
-            .slider-title .divider { width: 28px; height: 2px; }
+            .slider-title .divider { width: 4cqi; height: 0.3cqi; }
 
             .slider-counter {
-                top: 22px;
-                right: 20px;
-                font-size: 12px;
+                top: 2.5cqi;
+                right: 2.5cqi;
             }
-            .slider-counter .current { font-size: 20px; }
 
             .slider-text {
-                bottom: 56px;
-                padding: 0 16px;
+                bottom: 7cqi;
+                padding: 0 2cqi;
             }
-            .slider-text .badge  { font-size: 10px; padding: 4px 12px; margin-bottom: 10px; }
             .slider-text .caption { letter-spacing: 1px; }
 
-            .slider-control {
-                width: 40px;
-                height: 40px;
-            }
-            .slider-control svg { width: 18px; height: 18px; }
-            .prev-control { left: 14px; }
-            .next-control { right: 14px; }
-
-            .slider-dots {
-                bottom: 22px;
-                gap: 8px;
-            }
-            .slider-dot { width: 24px; }
+            /* 控件、指示点尺寸由 cqi 自动管理,这里不需覆盖 */
 
             /* ===== 摄影故事模块移动端间距优化 ===== */
             .photo-story {

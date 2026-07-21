@@ -262,9 +262,15 @@
         }
 
         @media (max-width: 480px) {
+            /* 手机端保持 2 列瀑布流,比 1 列更紧凑好看 */
             .portfolio-grid {
-                column-count: 1;
-                column-gap: 0;
+                column-count: 2;
+                column-gap: 8px;
+                column-fill: balance;       /* 两列高度均衡 */
+            }
+
+            .portfolio-item {
+                margin-bottom: 8px;
             }
 
             .portfolio-item img {
