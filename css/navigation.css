@@ -173,7 +173,9 @@
 }
 
 /* ==================== 响应式设计 ==================== */
-@media (max-width: 768px) {
+/* 断点 1024px:到这个宽度桌面排版已经塞不下,直接走汉堡菜单,
+   避免 nav-item 内部被挤成两行造成"双列"假象 */
+@media (max-width: 1024px) {
     .header .container {
         flex-wrap: wrap;
     }
