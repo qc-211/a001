@@ -4,188 +4,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>注册 - 倾城的个人网站</title>
+    <!-- 共享样式:变量 → 基础 → 加载动画 → 表单 -->
+    <link rel="stylesheet" href="./css/variables.css">
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/加载动画.css">
+    <link rel="stylesheet" href="./css/form.css">
     <style>
-        :root {
-            --primary: #4a90e2;
-            --primary-dark: #357abd;
-            --bg-gradient: linear-gradient(0deg, #ace0f9 0%, #fff1eb 100%);
-            --text-dark: #333;
-            --text-light: #666;
-            --white: #ffffff;
-            --gray-100: #f5f5f5;
-            --gray-200: #eeeeee;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            --radius: 12px;
-            --transition: all 0.3s ease;
-            --error: #e74c3c;
-            --success: #27ae60;
-        }
+        /* ==================== 注册页专属样式 ==================== */
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        /* body 居中(共享 base.css 默认非居中) */
         body {
-            font-family: "Microsoft YaHei", sans-serif;
-            background: var(--bg-gradient);
-            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
-        }
-
-        .register-card {
-            width: 100%;
-            max-width: 500px;
-            background: var(--white);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-        }
-
-        .register-header {
-            background: var(--primary-dark);
-            color: var(--white);
-            padding: 30px;
-            text-align: center;
-        }
-
-        .register-header h1 {
-            font-size: 28px;
-            margin: 0;
-        }
-
-        .register-body {
-            padding: 40px;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-dark);
-            font-weight: 500;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: var(--transition);
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-        }
-
-        .input-hint {
-            font-size: 12px;
-            color: var(--text-light);
-            margin-top: 5px;
-        }
-
-        .error-message {
-            color: var(--error);
-            font-size: 14px;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .btn-primary {
-            width: 100%;
-            padding: 14px;
-            background: var(--primary);
-            color: var(--white);
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: var(--transition);
-            margin-top: 10px;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
-
-        .form-footer {
-            text-align: center;
-            margin-top: 25px;
-            padding-top: 25px;
-            border-top: 1px solid var(--gray-200);
-        }
-
-        .form-footer a {
-            color: var(--primary);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .form-footer a:hover {
-            text-decoration: underline;
-        }
-
-        .password-strength {
-            height: 4px;
-            background: var(--gray-200);
-            border-radius: 2px;
-            margin-top: 8px;
-            overflow: hidden;
-            display: none;
-        }
-
-        .strength-bar {
-            height: 100%;
-            width: 0;
-            transition: width 0.3s ease;
-        }
-
-        .strength-weak { width: 33.33%; background: var(--error); }
-        .strength-medium { width: 66.66%; background: #f39c12; }
-        .strength-strong { width: 100%; background: var(--success); }
-
-        /* 加载动画 */
-        .loading-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--white);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
-        }
-
-        body.loaded .loading-container {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--gray-100);
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
     </style>
 </head>

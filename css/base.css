@@ -1,0 +1,59 @@
+/* ============================================================
+ *  全站基础样式 (reset + body + 容器 + main)
+ *  - 依赖 variables.css
+ *  - 加载顺序: variables.css → base.css
+ * ============================================================ */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 "PingFang SC", "Hiragino Sans GB",
+                 "Microsoft YaHei", sans-serif;
+    color: var(--text-dark);
+    background: var(--bg-gradient);
+    min-height: 100vh;
+    line-height: 1.6;
+    /* 防止横向滚动溢出 */
+    overflow-x: hidden;
+}
+
+main {
+    padding: 40px 0;
+}
+
+/* 通用容器:默认 max-width 1200,小页面可在自己的 <style> 中覆盖 */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* 点击反馈优化 (移动端) */
+button,
+.menu-toggle,
+.btn-login,
+.btn-reg,
+a {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+/* 全局响应式:小屏容器收紧 */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+    main {
+        padding: 20px 0 40px;
+    }
+}

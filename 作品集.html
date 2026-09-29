@@ -4,63 +4,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>作品集 - 倾城的个人网站</title>
+    <!-- 共享样式:变量 → 基础 → 加载动画 → 导航 → 页脚 → 图片放大 -->
+    <link rel="stylesheet" href="./css/variables.css">
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/加载动画.css">
     <link rel="stylesheet" href="./css/navigation.css">
     <link rel="stylesheet" href="./css/页脚.css">
+    <link rel="stylesheet" href="./css/section-header.css">
+    <link rel="stylesheet" href="./css/image-zoom.css">
     <style>
-        :root {
-            --primary: #4a90e2;
-            --primary-dark: #357abd;
-            --bg-gradient: linear-gradient(0deg, #ace0f9 0%, #fff1eb 100%);
-            --text-dark: #333;
-            --text-light: #666;
-            --white: #ffffff;
-            --gray-100: #f5f5f5;
-            --gray-200: #eeeeee;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.15);
-            --radius: 12px;
-            --transition: all 0.3s ease;
-        }
+        /* ==================== 作品集专属样式 ==================== */
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: "Microsoft YaHei", sans-serif;
-            background: var(--bg-gradient);
-            min-height: 100vh;
-            /* 【新增】防止滚动溢出 */
-            overflow-x: hidden;
-        }
-
-        main {
-            padding: 40px 0;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .section-title {
-            font-size: 36px;
-            color: var(--text-dark);
-            margin-bottom: 10px;
-        }
-
-        .section-subtitle {
-            color: var(--text-light);
-            font-size: 16px;
-        }
+        /* 区块标题边距微调(本页面略大) */
+        .section-header { margin-bottom: 50px; }
 
         /* 作品集网格 —— CSS 多列瀑布流(masonry) */
         .portfolio-grid {
@@ -189,48 +145,7 @@
             background: var(--gray-100);
         }
 
-        /* 图片预览模态框 */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 10000;
-            align-items: center;
-            justify-content: center;
-            /* 【新增】防止滚动穿透 */
-            touch-action: none;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            max-width: 90%;
-            max-height: 90vh;
-            position: relative;
-        }
-
-        .modal-img {
-            max-width: 100%;
-            max-height: 85vh;
-            object-fit: contain;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: -40px;
-            right: 0;
-            color: var(--white);
-            font-size: 30px;
-            cursor: pointer;
-            background: none;
-            border: none;
-        }
+        /* 图片预览模态框样式已抽离到 css/image-zoom.css */
 
         /* ==================== 响应式:瀑布流列数随窗口自适应 ==================== */
         @media (max-width: 1200px) {
@@ -383,11 +298,10 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => document.body.classList.add('loaded'), 300);
-            
+
             initMobileMenu();
             initBackToTop();
             initFilter();
-            initImagePreview();
             renderPortfolio('all');
         });
 
@@ -451,8 +365,9 @@
                         </div>
                     </div>
                 `;
-                div.addEventListener('click', () => openModal(item));
+                // 点击行为由 JS/image-zoom.js 通过 MutationObserver 自动绑定
                 grid.appendChild(div);
+                if (window.imageZoom) window.imageZoom.refresh();
             });
         }
 
@@ -467,27 +382,10 @@
             });
         }
 
-        function initImagePreview() {
-            const modal = document.getElementById('imageModal');
-            const modalImg = document.getElementById('modalImg');
-            const closeBtn = document.getElementById('modalClose');
-
-            closeBtn.addEventListener('click', closeModal);
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) closeModal();
-            });
-
-            function closeModal() {
-                modal.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            }
-
-            window.openModal = function(item) {
-                modalImg.src = item.src;
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            };
-        }
+        // 图片预览(滚轮缩放 + 双指捏合 + 拖动平移)由 JS/image-zoom.js 提供
     </script>
+
+    <!-- 共享图片放大预览模块:支持 .portfolio-item / .zoomable / [data-zoom] 自动绑定 -->
+    <script src="./JS/image-zoom.js"></script>
 </body>
 </html>

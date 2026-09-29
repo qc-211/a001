@@ -4,129 +4,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>倾城的个人博客</title>
+    <!-- 共享样式:变量 → 基础 → 加载动画 → 导航 → 页脚 → 图片放大 -->
+    <link rel="stylesheet" href="./css/variables.css">
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/加载动画.css">
     <link rel="stylesheet" href="./css/navigation.css">
+    <link rel="stylesheet" href="./css/页脚.css">
+    <link rel="stylesheet" href="./css/image-zoom.css">
     <style>
-        /* ==================== CSS变量与全局样式 ==================== */
-        :root {
-            --primary: #4a90e2;
-            --primary-dark: #357abd;
-            --bg-gradient: linear-gradient(0deg, #ace0f9 0%, #fff1eb 100%);
-            --text-dark: #333;
-            --text-light: #666;
-            --white: #ffffff;
-            --gray-100: #f5f5f5;
-            --gray-200: #eeeeee;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.15);
-            --radius: 12px;
-            --transition: all 0.3s ease;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
-            color: var(--text-dark);
-            background: var(--bg-gradient);
-            min-height: 100vh;
-            line-height: 1.6;
-            transition: var(--transition);
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .clear-fix::after {
-            content: "";
-            display: table;
-            clear: both;
-        }
-
-        /* ==================== 加载动画 ==================== */
-        .loading-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--white);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-
-        body.loaded .loading-container {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--gray-100);
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--text-dark);
-            padding: 8px;
-            border-radius: 8px;
-        }
-
-        .menu-toggle:active {
-            background: var(--gray-100);
-        }
-
-        .header-right a {
-            margin-left: 15px;
-            padding: 8px 20px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-size: 14px;
-            transition: var(--transition);
-            display: inline-block;
-        }
-
-        .btn-login {
-            color: var(--primary);
-            border: 1px solid var(--primary);
-        }
-
-        .btn-login:hover {
-            background: var(--primary);
-            color: var(--white);
-        }
-
-        .btn-reg {
-            background: var(--primary);
-            color: var(--white);
-        }
-
-        .btn-reg:hover {
-            background: var(--primary-dark);
-        }
+        /* ==================== 首页专属样式 ==================== */
 
         /* ==================== 轮播图 - 16:9 横屏版 ==================== */
         .fullscreen-slider {
@@ -681,115 +567,8 @@
             transform: translateX(4px);
         }
 
-        /* 页脚 - 响应式设计 */
-        .footer {
-            background: var(--text-dark);
-            color: var(--white);
-            padding: 60px 0;
-            text-align: center;
-            position: relative;
-        }
-
-        .footer-content h3 {
-            font-size: 24px;
-            margin-bottom: 15px;
-        }
-
-        .footer-desc {
-            color: rgba(255,255,255,0.8);
-            margin-bottom: 25px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.6;
-        }
-
-        .divider {
-            width: 100px;
-            height: 2px;
-            background: var(--primary);
-            margin: 25px auto;
-        }
-
-        .copyright {
-            font-size: 13px;
-            color: rgba(255,255,255,0.6);
-            margin: 8px 0;
-            line-height: 1.5;
-        }
-
-        /* 回到顶部 - 响应式按钮 */
-        .back-to-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            background: var(--primary);
-            color: var(--white);
-            border: none;
-            border-radius: 50%;
-            font-size: 20px;
-            cursor: pointer;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: var(--transition);
-            z-index: 999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .back-to-top.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* 图片预览模态框 - 响应式 */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 10000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            max-width: 95%;
-            max-height: 95vh;
-            position: relative;
-        }
-
-        .modal-img {
-            max-width: 100%;
-            max-height: 90vh;
-            object-fit: contain;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: -40px;
-            right: 0;
-            color: var(--white);
-            font-size: 30px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        /* 页脚 / 回到顶部 / 图片预览模态框 样式已抽离到 css/ */
+        /*   页脚 → css/页脚.css    图片预览 → css/image-zoom.css */
 
         /* ==================== 摄影故事模块 - 调整间距后的样式 ==================== */
         .photo-story {
@@ -903,59 +682,131 @@
 
             /* 控件、指示点尺寸由 cqi 自动管理,这里不需覆盖 */
 
-            /* ===== 摄影故事模块移动端间距优化 ===== */
+            /* ===== 摄影故事模块移动端 - 引言卡片风格 ===== */
             .photo-story {
-                padding: 20px 20px; /* 左右20px内边距，远离屏幕边缘 */
-                margin: 30px auto; /* 【关键修改】移动端间距从20px增加到30px */
-                border-left-width: 3px;
-                box-shadow: var(--shadow);
-            }
-            
-            .photo-story h3 {
-                font-size: 18px;
-            }
-            
-            .photo-story p {
-                font-size: 15px;
-                line-height: 1.5;
-            }
-            
-            .photo-story span {
-                margin-top: 10px;
-                font-size: 15px;
+                /* 加宽内边距,留出更多呼吸空间 */
+                padding: 24px 22px 22px;
+                margin: 30px 16px;     /* 左右各留 16px,卡片化 */
+                /* 左边框加粗 + 渐变,提升视觉重量 */
+                border-left: 5px solid var(--primary);
+                border-radius: 12px;
+                background: linear-gradient(135deg, #ffffff 0%, #f6f9fc 100%);
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+                position: relative;
             }
 
-            /* ===== 个人名片移动端优化 ===== */
+            /* 右上角加引号装饰 */
+            .photo-story::before {
+                content: '"';
+                position: absolute;
+                top: -10px;
+                right: 18px;
+                font-size: 64px;
+                line-height: 1;
+                color: var(--primary);
+                opacity: 0.18;
+                font-family: Georgia, serif;
+            }
+
+            .photo-story h3 {
+                font-size: 17px;
+                font-weight: 600;
+                margin-bottom: 12px;
+                color: var(--text-dark);
+                /* 标题加 icon 装饰,营造"题记"感 */
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .photo-story p {
+                font-size: 14px;
+                line-height: 1.75;    /* 行高加大,长文更好读 */
+                color: #555;
+                margin-bottom: 0;
+            }
+
+            .photo-story span {
+                margin-top: 14px;
+                font-size: 14px;
+                font-weight: 600;
+                color: var(--primary);
+                padding-top: 12px;
+                border-top: 1px dashed rgba(74, 144, 226, 0.2);
+                display: block;
+            }
+
+            /* ===== 个人名片移动端 - 紧凑社交卡片风格 ===== */
             main {
-                padding: 40px 0;
+                padding: 30px 0;
             }
 
             .card-container {
+                /* 居中堆叠,各元素紧凑排列 */
                 flex-direction: column;
                 text-align: center;
-                padding: 25px 20px;
-                margin-bottom: 50px;
-                gap: 20px;
+                padding: 22px 20px 18px;     /* 上下内边距大幅压缩 */
+                margin-bottom: 32px;
+                gap: 10px;                   /* 元素间距从 16 缩到 10 */
+                background: linear-gradient(180deg, #ffffff 0%, #fafbfd 100%);
+                border: 1px solid rgba(74, 144, 226, 0.08);
+                position: relative;
+                overflow: hidden;
+            }
+
+            /* 顶部装饰条:细线即可 */
+            .card-container::before {
+                content: '';
+                position: absolute;
+                top: 0; left: 0; right: 0;
+                height: 2px;
+                background: linear-gradient(90deg, var(--primary), #6ab0ff);
+            }
+
+            .card-avatar {
+                position: relative;
+                margin-bottom: 0;
             }
 
             .card-avatar img {
-                width: 80px;
+                width: 80px;                /* 头像从 96 缩到 80 */
                 height: 80px;
                 border-width: 3px;
+                box-shadow: 0 3px 10px rgba(74, 144, 226, 0.18);
             }
 
             .card-info h2 {
-                font-size: 22px;
-                margin-bottom: 8px;
+                font-size: 20px;            /* 姓名从 22 缩到 20 */
+                margin-bottom: 4px;
             }
 
             .card-tag {
-                font-size: 14px;
-                margin-bottom: 8px;
+                font-size: 12.5px;
+                margin-bottom: 4px;
+                color: var(--primary);
+                font-weight: 500;
             }
 
             .card-style {
-                font-size: 13px;
+                font-size: 12px;
+                color: var(--text-light);
+                margin-bottom: 0;
+            }
+
+            /* 数据栏:紧凑横排,缩小上下间距 */
+            .card-stats {
+                margin-top: 4px;
+                padding-top: 10px;          /* 虚线上方留白减少 */
+                border-top: 1px dashed rgba(0,0,0,0.08);
+                flex-direction: row;
+                justify-content: center;
+                gap: 18px;
+                flex-wrap: nowrap;
+            }
+
+            .stat-item {
+                font-size: 12px;
+                gap: 5px;
             }
 
             .card-stats {
@@ -994,38 +845,17 @@
             .case-overlay .meta  { font-size: 11px; }
             .view-all-btn { padding: 10px 24px; font-size: 13px; }
 
-            /* ===== 页脚移动端优化 ===== */
-            .footer {
-                padding: 40px 0 30px;
-            }
+            /* 页脚 / 回到顶部 移动端样式已抽离到 css/页脚.css */
 
-            .footer-content h3 {
-                font-size: 20px;
-                margin-bottom: 10px;
+            /* 联系方式那条稍突出(首页专属) */
+            .copyright.contact {
+                opacity: 0.85;
+                color: rgba(255,255,255,0.9);
+                margin: 8px 0;
             }
-
-            .footer-desc {
-                font-size: 13px;
-                padding: 0 15px;
-                margin-bottom: 20px;
-            }
-
-            .divider {
-                margin: 20px auto;
-            }
-
-            .copyright {
-                font-size: 12px;
-                margin: 6px 0;
-            }
-
-            /* ===== 回到顶部按钮优化 ===== */
-            .back-to-top {
-                width: 40px;
-                height: 40px;
-                font-size: 16px;
-                bottom: 20px;
-                right: 20px;
+            .copyright.contact a {
+                color: #6ab0ff;
+                text-decoration: none;
             }
         }
 
@@ -1274,19 +1104,18 @@
             <h3>倾城的个人网站</h3>
             <p class="footer-desc">用镜头捕捉生活中的美好瞬间，记录时光的痕迹</p>
             <div class="divider"></div>
-            <p class="copyright">© 2025 倾城的个人网站 | 自由摄影师作品展示</p>
-            <p class="copyright">联系方式：2196353107@qq.com | 约拍请私信</p>
-            <p class="copyright">本网站作品均为原创，未经授权禁止商用转载</p>
+            <p class="copyright contact">
+                <span>📬</span>
+                <a href="mailto:2196353107@qq.com">2196353107@qq.com</a>
+                <span style="margin: 0 6px; opacity: 0.4">|</span>
+                <span>约拍请私信</span>
+            </p>
+            <p class="copyright">© 2025 倾城的个人网站 · 自由摄影师作品展示</p>
+            <p class="copyright">本网站作品均为原创 · 未经授权禁止商用转载</p>
         </div>
     </footer>
 
-    <!-- 图片预览模态框 -->
-    <div class="modal">
-        <div class="modal-content">
-            <button class="modal-close" aria-label="关闭预览">×</button>
-            <img alt="预览图片" class="modal-img">
-        </div>
-    </div>
+    <!-- 图片预览模态框由 JS/image-zoom.js 自动注入 -->
 
     <!-- 回到顶部按钮 -->
     <button class="back-to-top" aria-label="回到顶部">↑</button>
@@ -1301,10 +1130,11 @@
             initScrollEffects();
             initBackToTop();
             initCounters();
-            initImagePreview();
             initFilter();
             initHeaderScroll();
         });
+
+        // 图片放大预览功能由 JS/image-zoom.js 自动接管(.case-card 会自动绑定)
 
         // 导航栏滚动效果
         function initHeaderScroll() {
@@ -1482,34 +1312,11 @@
             });
         }
 
-        // 图片预览
-        function initImagePreview() {
-            const modal = document.querySelector('.modal');
-            const modalImg = document.querySelector('.modal-img');
-            const closeBtn = document.querySelector('.modal-close');
-
-            document.querySelectorAll('.case-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const img = card.querySelector('.case-img');
-                    if (img) {
-                        modalImg.src = img.src;
-                        modal.classList.add('active');
-                        document.body.style.overflow = 'hidden';
-                    }
-                });
-            });
-
-            closeBtn.addEventListener('click', () => closeModal());
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) closeModal();
-            });
-
-            function closeModal() {
-                modal.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            }
-        }
+        // 图片预览(滚轮缩放 + 双指捏合 + 拖动平移)由 JS/image-zoom.js 提供
 
     </script>
+
+    <!-- 共享图片放大预览模块:支持 .case-card / .zoomable / [data-zoom] 自动绑定 -->
+    <script src="./JS/image-zoom.js"></script>
 </body>
 </html>

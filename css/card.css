@@ -1,0 +1,114 @@
+/* ============================================================
+ *  通用卡片样式
+ *  - 个人中心 (.profile-card / .content-card)
+ *  - 约拍     (.content-card)
+ *  - 列表     (.work-card)
+ *  - 依赖 variables.css / base.css
+ * ============================================================ */
+
+/* 基础白色卡片:白底 + 圆角 + 阴影 + 过渡 */
+.card,
+.content-card,
+.work-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+/* 内容卡片默认内边距与外间距 */
+.content-card {
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+/* 内容卡片的二级标题:左侧下划线 */
+.content-card h2 {
+    color: var(--primary-dark);
+    margin-bottom: 15px;
+    font-size: 20px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--primary);
+    display: inline-block;
+}
+
+/* 列表段落 */
+.content-card p {
+    color: var(--text-dark);
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 12px;
+}
+
+/* 列表项 */
+.content-card ul {
+    margin-left: 15px;
+    margin-bottom: 15px;
+}
+.content-card li {
+    margin-bottom: 8px;
+    line-height: 1.6;
+    font-size: 15px;
+}
+
+/* 个人信息卡片:头像 + 信息横排 */
+.profile-card {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    padding: 30px;
+    margin-bottom: 20px;
+}
+
+.profile-card .avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 20%;
+    object-fit: cover;
+    border: 4px solid var(--primary);
+    flex-shrink: 0;
+}
+
+.profile-card .profile-info {
+    flex: 1;
+}
+
+.profile-card .profile-info h1 {
+    color: var(--text-dark);
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.profile-card .profile-info .subtitle {
+    color: var(--primary);
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.profile-card .profile-info .location {
+    color: var(--text-light);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* 移动端 */
+@media (max-width: 768px) {
+    .profile-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 25px 20px;
+    }
+    .profile-card .avatar {
+        width: 100px;
+        height: 100px;
+    }
+    .profile-card .profile-info h1 {
+        font-size: 24px;
+    }
+    .content-card h2 {
+        font-size: 18px;
+    }
+}

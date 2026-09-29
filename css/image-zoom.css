@@ -1,0 +1,116 @@
+/* ====================================================================
+ *  image-zoom.css  共享图片放大预览样式
+ *  适用页面:首页 / 作品集 / 列表 等任何需要图片放大功能的页面
+ *  用法:
+ *    1. <link rel="stylesheet" href="./css/image-zoom.css">
+ *    2. <script src="./JS/image-zoom.js"></script>  (放在 body 末尾)
+ *    3. 给需要放大的元素加 class="zoomable"
+ *       (或 class="case-card" / class="portfolio-item" 等已内置支持的类名)
+ *  类名同时支持旧写法 .modal* 与新写法 .zoom-modal*,向后兼容
+ * ==================================================================== */
+
+/* ========== 模态框遮罩 ========== */
+.zoom-modal,
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+}
+
+.zoom-modal.active,
+.modal.active {
+    display: flex;
+    touch-action: none;          /* 打开期间禁止浏览器默认触屏手势 */
+}
+
+/* ========== 内容容器(居中) ========== */
+.zoom-modal-content,
+.modal-content {
+    max-width: 95%;
+    max-height: 95vh;
+    position: relative;
+    overflow: visible;            /* 允许缩放后的图片溢出 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ========== 图片本体 ========== */
+.zoom-modal-img,
+.modal-img {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    display: block;
+    cursor: zoom-in;              /* 提示:可滚动放大 */
+    transform-origin: center center;
+    transition: transform 0.25s ease-out;
+    touch-action: none;           /* 把触屏交给 JS */
+    user-select: none;
+    -webkit-user-drag: none;
+    will-change: transform;
+}
+
+/* 状态:已放大 -> 可抓取 */
+.zoom-modal-img.zoomed,
+.modal-img.zoomed {
+    cursor: grab;
+}
+
+/* 状态:正在拖动/捏合 -> 抓取中 + 关闭过渡(避免滞后感) */
+.zoom-modal-img.dragging,
+.modal-img.dragging {
+    transition: none;
+    cursor: grabbing;
+}
+
+/* ========== 关闭按钮 ========== */
+/* 用 fixed 定位,放在视口右上角,缩放后也不会被图片盖住 */
+.zoom-modal-close,
+.modal-close {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    color: #fff;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.zoom-modal-close:hover,
+.modal-close:hover {
+    background: rgba(0, 0, 0, 0.85);
+    transform: scale(1.08);
+}
+
+/* ========== 缩放触发器(可点击放大的元素) ========== */
+.zoomable,
+.case-card,
+.portfolio-item {
+    cursor: zoom-in;
+}
+
+/* 移动端关闭按钮稍微大一点,方便点击 */
+@media (max-width: 768px) {
+    .zoom-modal-close,
+    .modal-close {
+        top: 16px;
+        right: 16px;
+        width: 48px;
+        height: 48px;
+    }
+}

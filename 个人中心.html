@@ -4,112 +4,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>个人中心 - 倾城的个人网站</title>
+    <!-- 共享样式:变量 → 基础 → 加载动画 → 导航 → 页脚 → 卡片 -->
+    <link rel="stylesheet" href="./css/variables.css">
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/加载动画.css">
     <link rel="stylesheet" href="./css/navigation.css">
     <link rel="stylesheet" href="./css/页脚.css">
+    <link rel="stylesheet" href="./css/card.css">
+    <link rel="stylesheet" href="./css/image-zoom.css">
     <style>
-        :root {
-            --primary: #4a90e2;
-            --primary-dark: #357abd;
-            --bg-gradient: linear-gradient(0deg, #ace0f9 0%, #fff1eb 100%);
-            --text-dark: #333;
-            --text-light: #666;
-            --white: #ffffff;
-            --gray-100: #f5f5f5;
-            --gray-200: #eeeeee;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            --radius: 12px;
-            --transition: all 0.3s ease;
-        }
+        /* ==================== 个人中心专属样式 ==================== */
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-            background: var(--bg-gradient);
-            min-height: 100vh;
-            line-height: 1.6;
-        }
-
-        main {
-            padding: 20px 0 40px;
-            min-height: calc(100vh - 200px);
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-
-        /* 个人信息卡片 */
-        .profile-card {
-            background: var(--white);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 30px;
-            margin-bottom: 20px;
-            display: flex;
-            gap: 30px;
-            align-items: center;
-        }
-
-        .avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 20%;
-            object-fit: cover;
-            border: 4px solid var(--primary);
-            flex-shrink: 0;
-        }
-
-        .profile-info h1 {
-            color: var(--text-dark);
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-
-        .profile-info .subtitle {
-            color: var(--primary);
-            font-size: 16px;
-            font-weight: 500;
-            margin-bottom: 10px;
-        }
-
-        .profile-info .location {
-            color: var(--text-light);
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        /* 内容卡片 */
-        .content-card {
-            background: var(--white);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 25px;
-            margin-bottom: 20px;
-        }
-
-        .content-card h2 {
-            color: var(--primary-dark);
-            margin-bottom: 15px;
-            font-size: 20px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid var(--primary);
-            display: inline-block;
-        }
-
-        .content-card p {
-            color: var(--text-dark);
-            font-size: 15px;
-            line-height: 1.8;
-        }
+        /* 容器收紧 */
+        .container { max-width: 1000px; padding: 0 15px; }
 
         /* 技能标签 */
         .skills-container {
@@ -193,68 +100,14 @@
             height: 100%;
             object-fit: cover;
         }
-        .content-card {
-            background: var(--white);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 25px;
-            margin-bottom: 20px;
-        }
-        
-        .content-card h2 {
-            color: var(--primary-dark);
-            margin-bottom: 15px;
-            font-size: 20px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid var(--primary);
-            display: inline-block;
-        }
-        .content-card ul {
-            margin-left: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .content-card li {
-            margin-bottom: 8px;
-            line-height: 1.6;
-            font-size: 15px;
-        }
-        
-        /* 移动端优化 */
+
+        /* 移动端 */
         @media (max-width: 768px) {
-            .profile-card {
-                flex-direction: column;
-                text-align: center;
-                padding: 25px 20px;
-            }
-
-            .avatar {
-                width: 100px;
-                height: 100px;
-            }
-
-            .profile-info h1 {
-                font-size: 24px;
-            }
-
-            .content-card h2 {
-                font-size: 18px;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
         }
-
         @media (max-width: 480px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .works-preview {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-            }
+            .stats-grid { grid-template-columns: 1fr; }
+            .works-preview { grid-template-columns: repeat(2, 1fr); gap: 10px; }
         }
     </style>
 </head>
@@ -401,25 +254,11 @@
         }
 
         function createBackToTopBtn() {
+            // 样式由 css/页脚.css 提供,这里只创建元素并绑定行为
             const btn = document.createElement('button');
             btn.className = 'back-to-top';
+            btn.setAttribute('aria-label', '回到顶部');
             btn.innerHTML = '↑';
-            btn.style.cssText = `
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                width: 44px;
-                height: 44px;
-                border-radius: 50%;
-                background: var(--primary);
-                color: white;
-                border: none;
-                cursor: pointer;
-                opacity: 0;
-                transition: opacity 0.3s;
-                z-index: 1000;
-                font-size: 18px;
-            `;
             document.body.appendChild(btn);
             return btn;
         }
