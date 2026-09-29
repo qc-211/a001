@@ -1,22 +1,23 @@
 /* ====================================================================
- *  image-zoom.js   共享图片放大预览 + 滚轮/捏合缩放 + 拖动平移
+ *  image-zoom.js   原生图片预览组件:滚轮缩放 / 拖拽平移 / 双击切换
  *  --------------------------------------------------------------------
  *  用法(任意页面):
- *    1. 引入 css/image-zoom.css
- *    2. 引入本文件 (建议放 body 末尾)
+ *    1. <link rel="stylesheet" href="./css/image-zoom.css">
+ *    2. <script src="./JS/image-zoom.js"></script>  (放 </body> 前)
  *    3. 给需要点击放大的元素加 class="zoomable"
  *       (也支持 .case-card / .portfolio-item / [data-zoom] 等常见类名)
- *    4. 如果需要手动打开,调用 window.imageZoom.open('图片路径')
+ *    4. 手动调用: window.imageZoom.open('图片路径')
  *  --------------------------------------------------------------------
  *  行为:
- *    - 桌面端:鼠标滚轮缩放,已放大时可拖动,双击切换放大
- *    - 移动端:双指捏合缩放,已放大时可单指拖动,双击切换放大
- *    - 关闭:点击 × / 点击遮罩 / 按 Esc 键
+ *    桌面:鼠标滚轮以光标为中心缩放;按住可拖动;双击切换缩放
+ *    移动:双指捏合以两指中点为中心缩放;单指拖动;双击切换
+ *    关闭:点 × / 点遮罩 / 按 Esc 键
  *  --------------------------------------------------------------------
- *  Bug 修复要点:
- *    - 引入 lastInteractionWasDrag 标记,拖动后短时间内吞掉 click/dblclick,
- *      防止连续拖动被误判为 dblclick 而重置缩放导致"卡住"
- *    - 关闭按钮用 position:fixed 独立于图片容器,放大后不会被图片盖住
+ *  核心实现要点(详见各函数注释):
+ *    - 缩放数学不依赖 transform-origin,直接基于 getBoundingClientRect
+ *      测量图像当前视口位置,反推"使光标处像素保持不动"所需的 translate
+ *    - 缩放范围 0.2x ~ 5x,边界限制:放大时贴边、缩小时强制居中
+ *    - transform: translate(tx, ty) scale(s) 组合,绝不动 img 的 width/height
  * ==================================================================== */
 
 (function () {
@@ -25,21 +26,21 @@
     // 防止重复加载
     if (window.imageZoom) return;
 
-    // ============== 可被 window.ImageZoomConfig 覆盖的默认配置 ==============
+    // ============== 默认配置(可被 window.ImageZoomConfig 覆盖) ==============
     const DEFAULT_CONFIG = {
-        // 自动绑定的"点击放大"触发器选择器(任一匹配即可)
+        // 自动绑定的"点击放大"触发器选择器
         TRIGGER_SELECTOR: '.zoomable, .case-card, .portfolio-item, [data-zoom], [data-zoom-src]',
-        // 模态框相关选择器(新旧类名都支持)
-        MODAL_SELECTOR:       '.zoom-modal, .modal',
+        // 模态框相关选择器(新旧类名都兼容)
+        MODAL_SELECTOR:          '.zoom-modal, .modal',
         MODAL_CONTENT_SELECTOR: '.zoom-modal-content, .modal-content',
-        MODAL_IMG_SELECTOR:   '.zoom-modal-img, .modal-img',
-        MODAL_CLOSE_SELECTOR: '.zoom-modal-close, .modal-close',
+        MODAL_IMG_SELECTOR:      '.zoom-modal-img, .modal-img',
+        MODAL_CLOSE_SELECTOR:    '.zoom-modal-close, .modal-close',
         // 缩放参数
-        MIN_SCALE: 1,
-        MAX_SCALE: 5,
-        WHEEL_STEP: 0.18,          // 滚轮每档 18%
-        DBLCLICK_SCALE: 2.5,       // 双击放大的目标倍率
-        DRAG_SUPPRESS_MS: 400      // 拖动后这段时间内吞掉 click/dblclick
+        MIN_SCALE:        0.2,   // 用户要求:最小 0.2 倍
+        MAX_SCALE:        5,     // 用户要求:最大 5 倍
+        WHEEL_STEP:       0.18,  // 滚轮每档 18%
+        DBLCLICK_SCALE:   2.5,   // 双击放大的目标倍率
+        DRAG_SUPPRESS_MS: 400    // 拖动后这段时间吞掉 click / dblclick
     };
     const config = Object.assign({}, DEFAULT_CONFIG, window.ImageZoomConfig || {});
 
@@ -60,14 +61,14 @@
 
         modal = document.querySelector(config.MODAL_SELECTOR);
 
-        // 如果页面没写 modal 标记,自动注入一个
+        // 页面没写 modal 标记时,自动注入一个
         if (!modal) {
             modal = document.createElement('div');
             modal.className = 'zoom-modal';
             modal.innerHTML =
                 '<button class="zoom-modal-close" aria-label="关闭预览">×</button>' +
                 '<div class="zoom-modal-content">' +
-                '<img class="zoom-modal-img" alt="预览图片">' +
+                    '<img class="zoom-modal-img" alt="预览图片">' +
                 '</div>';
             document.body.appendChild(modal);
         }
@@ -81,34 +82,27 @@
             return;
         }
 
-        // 把 closeBtn 移出 modal-content(关键修复),固定到视口右上角
-        // 这样无论图片缩放到多大,关闭按钮都不会被遮住
+        // 把关闭按钮提升到 modal 直接子元素,固定到视口右上角
+        // 这样图片缩放到多大都不会被遮住
         if (closeBtn && modalContent && closeBtn.parentElement === modalContent) {
-            modal.appendChild(closeBtn);  // 提升到 modal 直接子元素
+            modal.appendChild(closeBtn);
         }
 
-        // 初始化状态对象
         state = { scale: 1, translateX: 0, translateY: 0 };
 
         bindTriggers();
         setupEventHandlers();
 
         // 监听 DOM 变化,自动给后插入的 .zoomable 元素绑定
-        const observer = new MutationObserver(bindTriggers);
-        observer.observe(document.body, { childList: true, subtree: true });
+        new MutationObserver(bindTriggers).observe(document.body, { childList: true, subtree: true });
 
-        // 暴露公共 API
-        window.imageZoom = {
-            open:  openModal,
-            close: closeModal,
-            refresh: bindTriggers
-        };
+        // 公共 API
+        window.imageZoom = { open: openModal, close: closeModal, refresh: bindTriggers };
     }
 
     // ============== 触发器绑定 ==============
     function bindTriggers() {
-        const triggers = document.querySelectorAll(config.TRIGGER_SELECTOR);
-        triggers.forEach(el => {
+        document.querySelectorAll(config.TRIGGER_SELECTOR).forEach(el => {
             if (el.__zoomBound) return;
             el.__zoomBound = true;
             el.addEventListener('click', onTriggerClick);
@@ -116,15 +110,13 @@
     }
 
     function onTriggerClick(e) {
-        // 拖动刚结束 -> 吞掉这次 click(避免误触打开)
+        // 拖动刚结束 → 吞掉 click(避免误触打开)
         if (lastInteractionWasDrag) {
             e.preventDefault();
             e.stopPropagation();
             return;
         }
         e.preventDefault();
-
-        // 优先取 data-zoom-src,否则取元素本身/内部第一张 <img>
         const src = this.dataset.zoomSrc
                   || (this.tagName === 'IMG' ? this.src : (this.querySelector('img') || {}).src);
         if (src) openModal(src);
@@ -137,6 +129,8 @@
         resetTransform();
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
+        // 图片加载完后,做一次"按当前真实尺寸居中"的 clamp
+        modalImg.onload = () => { if (state.scale === 1) clampAndApply(); };
     }
 
     function closeModal() {
@@ -146,11 +140,61 @@
         resetTransform();
     }
 
-    // ============== 变换 ==============
+    // ============== 变换核心 ==============
+
+    /**
+     * 把 state 中的 translate/scale 应用到图像上
+     * 不修改 img.width / img.height,只通过 CSS transform 合成
+     *   transform: translate(tx, ty) scale(s)
+     * transform-origin 保持 center center(由 image-zoom.css 设置)
+     */
     function applyTransform() {
         modalImg.style.transform =
             `translate(${state.translateX}px, ${state.translateY}px) scale(${state.scale})`;
         modalImg.classList.toggle('zoomed', state.scale > 1);
+    }
+
+    /**
+     * clampTranslate + applyTransform 的组合调用
+     * 任何会改变 scale / translate 的操作后都要走一遍,
+     * 保证图像不会"飘"出可视区域
+     */
+    function clampAndApply() {
+        clampTranslate();
+        applyTransform();
+    }
+
+    /**
+     * 边界限制:把图像位置修正到合法范围
+     * 规则(单一公式,所有 scale 通用):
+     *   图像的 left ∈ [modal.left,  modal.right  - imgW]
+     *   图像的 top  ∈ [modal.top,   modal.bottom - imgH]
+     *
+     *   - 图像 >= 容器:区间两端颠倒(只能贴一边),图像最多覆盖容器
+     *   - 图像 <  容器:区间正向,图像只能在容器内部移动,不会跑出去
+     *
+     * 关键:这里不主动"居中",只"夹紧"。
+     *   旧的 force-center 逻辑会在 scale<1 时写入一个 translate 偏移,
+     *   缩回去后这个偏移会带着,造成"乱飘"。新版杜绝这种偏移。
+     */
+    function clampTranslate() {
+        if (!modal || !modalImg) return;
+        const imgRect   = modalImg.getBoundingClientRect();   // 当前实际占位
+        const modalRect = modal.getBoundingClientRect();      // 可视容器
+
+        // left / top 各自的合法区间(区间端点大小自动处理"图大"和"图小"两种情况)
+        const minLeft = Math.min(modalRect.left, modalRect.right  - imgRect.width);
+        const maxLeft = Math.max(modalRect.left, modalRect.right  - imgRect.width);
+        const minTop  = Math.min(modalRect.top,  modalRect.bottom - imgRect.height);
+        const maxTop  = Math.max(modalRect.top,  modalRect.bottom - imgRect.height);
+
+        // 把当前 left/top 夹到合法区间
+        const desiredLeft = Math.max(minLeft, Math.min(maxLeft, imgRect.left));
+        const desiredTop  = Math.max(minTop,  Math.min(maxTop,  imgRect.top));
+
+        // 累加差量(而不是直接赋值,因为这里用的是"实际位置",不是"translate 值")
+        state.translateX += (desiredLeft - imgRect.left);
+        state.translateY += (desiredTop  - imgRect.top);
     }
 
     function resetTransform() {
@@ -159,38 +203,50 @@
         state.translateY = 0;
         isDragging = false;
         modalImg.classList.remove('zoomed', 'dragging');
+        // 走一次 clamp:图像本身比容器小时,会被夹在视口内(由 flexbox 自然居中)
         applyTransform();
+        requestAnimationFrame(clampAndApply);
     }
 
-    function pinchDistance(t1, t2) {
-        return Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
-    }
+    // ============== 缩放核心:中心缩放(永不漂移) ==============
 
     /**
-     * 围绕视口内某点 (Mx, My) 进行缩放,
-     * 保证该点"指着的内容"在缩放后仍位于同一像素位置
-     * (数学推导: T' = M*(1-r) + T*r, 其中 r = newScale/oldScale)
+     * 以图像当前的几何中心为锚点缩放。
+     *
+     * 实现非常简单:
+     *   只改 state.scale,完全不动 state.translateX/Y。
+     *   因为 CSS 里 transform-origin: center center,
+     *   缩放天然以图像局部中心为轴,
+     *   viewport 上"图像的几何中心"自动保持不变(等于 translate + 局部中心)。
+     *
+     * 之后调用 clampAndApply():
+     *   - 缩放后图像仍在视口内 → translate 不需要变,中心就是中心
+     *   - 缩放后图像超出视口   → clamp 把多出来的边缘拉回到视口边界
+     *
+     * (Mx, My) 参数保留仅为兼容调用处,内部不使用。
+     *   想要"光标点位锁定缩放"的话在滚轮回调里单独写一份即可。
      */
     function zoomAround(Mx, My, factor) {
-        const newScale = Math.max(config.MIN_SCALE, Math.min(config.MAX_SCALE, state.scale * factor));
-        if (newScale === state.scale) return;
-        const r = newScale / state.scale;
-        state.translateX = Mx * (1 - r) + state.translateX * r;
-        state.translateY = My * (1 - r) + state.translateY * r;
+        void Mx; void My;  // 故意忽略:中心缩放不依赖光标位置
+        const oldScale = state.scale;
+        const newScale = Math.max(config.MIN_SCALE,
+                          Math.min(config.MAX_SCALE, oldScale * factor));
+        if (newScale === oldScale) return;
         state.scale = newScale;
-        applyTransform();
+        clampAndApply();
     }
+
+    // ============== 拖动 ==============
 
     /**
      * 把"刚发生了一次拖动"的事实记录下来,
-     * 持续 DRAG_SUPPRESS_MS 毫秒,期间吞掉 click/dblclick
+     * 持续 DRAG_SUPPRESS_MS 毫秒,期间吞掉 click / dblclick,
+     * 防止拖动释放瞬间被误判为"点背景关闭"或"双击重置"
      */
     function markDragInteraction() {
         lastInteractionWasDrag = true;
         clearTimeout(dragSuppressTimer);
-        dragSuppressTimer = setTimeout(() => {
-            lastInteractionWasDrag = false;
-        }, config.DRAG_SUPPRESS_MS);
+        dragSuppressTimer = setTimeout(() => { lastInteractionWasDrag = false; }, config.DRAG_SUPPRESS_MS);
     }
 
     // ============== 事件绑定 ==============
@@ -199,12 +255,12 @@
         // —— 关闭按钮 ——
         if (closeBtn) {
             closeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();   // 阻止冒泡到 modal 的"点遮罩关闭"
+                e.stopPropagation();   // 不冒泡到 modal 的"点遮罩关闭"
                 closeModal();
             });
         }
 
-        // —— 点 modal 背景关闭(拖动后短时内禁止,避免松手误关) ——
+        // —— 点 modal 背景关闭(拖动刚结束则忽略) ——
         modal.addEventListener('click', (e) => {
             if (e.target !== modal) return;
             if (lastInteractionWasDrag) return;
@@ -216,7 +272,7 @@
             if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
         });
 
-        // —— 滚轮缩放(桌面端) ——
+        // —— 滚轮缩放(桌面) ——
         modal.addEventListener('wheel', (e) => {
             if (!modal.classList.contains('active')) return;
             e.preventDefault();
@@ -224,23 +280,26 @@
             zoomAround(e.clientX, e.clientY, factor);
         }, { passive: false });
 
-        // —— 双击切换(桌面 + 移动端;拖动后短时内禁用) ——
+        // —— 双击切换(桌面 + 移动;拖动后短时间内忽略) ——
         modal.addEventListener('dblclick', (e) => {
             if (!modal.classList.contains('active')) return;
             if (lastInteractionWasDrag) return;
             e.preventDefault();
-            if (state.scale > 1) {
+            // 已经放大或被拖动过 → 还原;否则放大到 DBLCLICK_SCALE 倍
+            const moved = state.translateX !== 0 || state.translateY !== 0;
+            if (state.scale > 1 || moved) {
                 resetTransform();
             } else {
                 zoomAround(e.clientX, e.clientY, config.DBLCLICK_SCALE);
             }
         });
 
-        // —— 鼠标拖动平移(任何 scale 都允许,方便缩小后重新居中) ——
-        //   之前用 state.scale <= 1 早退,导致用户滚轮缩回原图后无法拖动纠正偏移
+        // —— 鼠标拖动平移 ——
+        // 注意:任何 scale 都允许拖动(包括 < 1 时),因为 clamp 会把图像拉回居中
         modalImg.addEventListener('mousedown', (e) => {
             e.preventDefault();
             isDragging = true;
+            // 记录"鼠标视口坐标 - 当前 translate"作为后续计算锚点
             dragStartX = e.clientX - state.translateX;
             dragStartY = e.clientY - state.translateY;
             modalImg.classList.add('dragging');
@@ -251,26 +310,26 @@
             markDragInteraction();
             state.translateX = e.clientX - dragStartX;
             state.translateY = e.clientY - dragStartY;
-            applyTransform();
+            // 拖动过程中实时 clamp,防止拖出边界
+            clampAndApply();
         });
 
         document.addEventListener('mouseup', () => {
             if (!isDragging) return;
             isDragging = false;
             modalImg.classList.remove('dragging');
-            // mouseup 后也要标记一次,防止 click 立即触发"点遮罩关闭"
-            markDragInteraction();
+            markDragInteraction();   // 防止 click 立即触发"点遮罩关闭"
         });
 
         // —— 双指捏合 + 单指拖动(移动端) ——
-        // 事件挂 modal 上,即使手指滑出图片也不断
+        const pinchDist = (t1, t2) => Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+
         modal.addEventListener('touchstart', (e) => {
             if (e.touches.length === 2) {
                 e.preventDefault();
-                lastPinchDist = pinchDistance(e.touches[0], e.touches[1]);
+                lastPinchDist = pinchDist(e.touches[0], e.touches[1]);
                 modalImg.classList.add('dragging');
             } else if (e.touches.length === 1) {
-                // 单指:任何 scale 都允许拖动(与桌面端一致)
                 e.preventDefault();
                 isDragging = true;
                 dragStartX = e.touches[0].clientX - state.translateX;
@@ -282,8 +341,9 @@
         modal.addEventListener('touchmove', (e) => {
             if (e.touches.length === 2) {
                 e.preventDefault();
-                const dist = pinchDistance(e.touches[0], e.touches[1]);
+                const dist = pinchDist(e.touches[0], e.touches[1]);
                 if (lastPinchDist === 0) { lastPinchDist = dist; return; }
+                // 双指中点作为缩放中心
                 const Mx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
                 const My = (e.touches[0].clientY + e.touches[1].clientY) / 2;
                 zoomAround(Mx, My, dist / lastPinchDist);
@@ -292,7 +352,7 @@
                 e.preventDefault();
                 state.translateX = e.touches[0].clientX - dragStartX;
                 state.translateY = e.touches[0].clientY - dragStartY;
-                applyTransform();
+                clampAndApply();
             }
         }, { passive: false });
 
